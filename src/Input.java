@@ -12,17 +12,28 @@ public class Input {
 	TextLCD lcd = ev3.getTextLCD();
 	Keys keys = ev3.getKeys();
 
-	EV3ColorSensor color = new EV3ColorSensor(SensorPort.S1);
-	SampleProvider colorRGB = color.getRGBMode();
-	SampleProvider reflectedRed = color.getRedMode();
+	EV3ColorSensor color;
+	SampleProvider colorRGB, reflectedRed;
 	
-	
-	
+	public Input() {
+		color = new EV3ColorSensor(SensorPort.S1);
+		colorRGB = color.getRGBMode();
+		reflectedRed = color.getRedMode();
+	}
+		
 	public void readColor() { // To boolean to return if success full?
 		
 	}
 	
-	public boolean isEnterPressed() {
+	public boolean buttonEnterDown() {
 		return Button.ENTER.isDown();
+	}
+	
+	public boolean buttonRightDown() {
+		return Button.RIGHT.isDown();
+	}
+	
+	public boolean buttonLeftDown() {
+		return Button.LEFT.isDown();
 	}
 }

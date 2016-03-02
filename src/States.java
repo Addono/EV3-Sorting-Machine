@@ -12,6 +12,7 @@ enum States implements State {
 		@Override
 		public State next(Input input) {
 			LCD.drawString("Resting now", 0, 0);
+			
 			return Rest;
 		}
 	},
@@ -19,11 +20,11 @@ enum States implements State {
 	WaitForButton {
 		@Override
 		public State next(Input input) {
-			if (input.isEnterPressed()) {
-				LCD.drawString("Waiting for a button", 0, 0);
+			if (input.buttonEnterDown()) {
 				return Rest;
 			}
 			
+			LCD.drawString("Waiting for a button", 0, 0);
 			return WaitForButton; 
 		}
 	},

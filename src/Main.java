@@ -1,4 +1,5 @@
 import lejos.hardware.Button;
+import lejos.utility.Delay;
 
 public class Main {
 
@@ -6,7 +7,9 @@ public class Main {
 		State s = States.Initial;
 		Input input = new Input();
 		
-		for(;!(s instanceof FinalState) && !Button.ESCAPE.isDown(); s = s.next(input));
+		for(;!(s instanceof FinalState) && !Button.ESCAPE.isDown(); s = s.next(input)) {
+			Delay.msDelay(100);
+		};
 	}
 
 }
