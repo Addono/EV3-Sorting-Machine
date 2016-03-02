@@ -10,10 +10,10 @@ enum States implements State {
 	
 	Rest {
 		@Override
-		public State next(Input input) {
-			//ask user to press enter if tube is empty
+		public State next(Input i) {
+			// Ask user to press enter if tube is empty
 			//LCD.drawString("Resting now", 0, 0);
-			if (input.buttonEnterDown()) {
+			if (i.buttonSSDown()) {
 				return Waiting;
 			} else {
 			return Rest;
@@ -23,13 +23,13 @@ enum States implements State {
 	
 	Waiting {
 		@Override
-		public State next(Input input) {
-			//display nr of inserted disks and enter to start the sorting
-			if (input.touchDown()) {
+		public State next(Input i) {
+			// Display nr. of inserted disks and enter to start the sorting
+			if (i.touchDown()) {
 				//count++
 				return DiskAdd;
 			}
-			if (input.buttonEnterDown()) {
+			if (i.buttonSSDown()) {
 				return AcceptDisk2;
 			}
 			return Waiting;
@@ -38,8 +38,8 @@ enum States implements State {
 	
 	DiskAdd {
 		@Override
-		public State next(Input input) {
-			if (!input.touchDown()) {
+		public State next(Input i) {
+			if (!i.touchDown()) {
 				return Waiting;
 			} else {
 				return DiskAdd;
@@ -63,16 +63,18 @@ enum States implements State {
 	
 	ExpectsDisk {
 		@Override
-		public State next(Input input) {
+		public State next(Input i) {
 			//input from the color sensor
 			//display nr of disks, plus nr of black en white
-			if (colorSensorWhite() && !colorSensorBlack() && !colorSensorGrey()) {
+			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
 				//do count--
 				//do motor angle++
 				//do black counter++
 				//wait until done
 				return AcceptDisk2;
-			} else if (colorSensorBlack() &&)
+			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
+				return AcceptDisk2;
+			}
 			
 		}
 	},
