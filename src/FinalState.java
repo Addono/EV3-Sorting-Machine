@@ -1,0 +1,4 @@
+
+interface FinalState extends State {
+	
+}
