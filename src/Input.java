@@ -17,9 +17,11 @@ public class Input {
 	float[] RGB = new float[3];
 	float[] redArray = new float[1];
 	float red;
+	float RGBAvg, redPer, bluePer, greenPer;
 	
-	public Input() throws Exception {
+	public Input() {
 		// Initialize color objects.
+		
 		color = new EV3ColorSensor(SensorPort.S1);
 		colorRGB = color.getRGBMode();
 		colorRed = color.getRedMode();
@@ -29,9 +31,28 @@ public class Input {
 		colorRGB.fetchSample(RGB, 0); // Get the RGB values.
 		colorRed.fetchSample(redArray, 0);
 		red = redArray[0];
+		
+		RGBAvg = (RGB[0] + RGB[1] + RGB[2]) / 3;
+		redPer = 100*RGB[0] / (3 * RGBAvg);
+		bluePer = 100*RGB[1] / (3 * RGBAvg);
+		greenPer = 100*RGB[2] / (3 * RGBAvg);
 	}
 	
+	public boolean colorSensorRed() {
+		return redPer > 30;
+	}
 	
+	public boolean colorSensorWhite() {
+		return RGBAvg >= .2;
+	}
+	
+	public boolean colorSensorBlack() {
+		return .2 > RGBAvg && RGBAvg >= .03;
+	}
+	
+	public boolean colorSensorGrey() {
+		return RGBAvg < .03;
+	}
 	
 	public boolean buttonSSDown() {
 		return Button.ENTER.isDown();
