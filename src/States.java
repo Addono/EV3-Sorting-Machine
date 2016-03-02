@@ -64,6 +64,8 @@ enum States implements State {
 	ExpectsDisk {
 		@Override
 		public State next(Input i) {
+			i.updateColor();
+			
 			//input from the color sensor
 			//display nr of disks, plus nr of black en white
 			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
