@@ -20,7 +20,7 @@ enum States implements State {
 	WaitForButton {
 		@Override
 		public State next(Input input) {
-			if (input.buttonEnterDown()) {
+			if (input.buttonSSDown()) {
 				return Rest;
 			}
 			
