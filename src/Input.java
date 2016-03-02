@@ -26,8 +26,16 @@ public class Input {
 		colorRGB = color.getRGBMode();
 		colorRed = color.getRedMode();
 	}
-		
-	public void readColor() { // Change to boolean to return if success full?
+	
+	// Handle color input
+	
+	/*
+	 * Fetches new colors from the sensor which replace the old values.
+	 * 
+	 * Note: Call them before getting color input which relies on this data,
+	 * else old information will be used.
+	 */
+	public void updateColor() { // Change to boolean to return if success full?
 		colorRGB.fetchSample(RGB, 0); // Get the RGB values.
 		colorRed.fetchSample(redArray, 0);
 		red = redArray[0];
@@ -54,6 +62,15 @@ public class Input {
 		return RGBAvg < .03;
 	}
 	
+	/*
+	 * Checks if the touch sensor is pressed.
+	 * @output	True if the sensor is pressed, false if it isn't.
+	 */
+	public boolean touchDown() {
+		return false;
+	}
+	
+	// Handle all button input.
 	public boolean buttonSSDown() {
 		return Button.ENTER.isDown();
 	}
