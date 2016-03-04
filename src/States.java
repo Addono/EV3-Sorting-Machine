@@ -12,7 +12,6 @@ enum States implements State {
 		@Override
 		public State next(Input i) {
 			// Ask user to press enter if tube is empty
-			//LCD.drawString("Resting now", 0, 0);
 			if (i.buttonSSDown()) {
 				return Waiting;
 			} else {
@@ -60,6 +59,22 @@ enum States implements State {
 			}
 		}
 	},
+	
+	ExpectsFinished {
+		@Override
+		public State next(Input i) {
+			i.updateColor();
+			if (i.colorSensorBlack() || i.colorSensorWhite()) {
+				//unexpected error
+				return AskUser;
+			} else {
+				//ask user if tube is empty
+				while (!i.buttonYesDown()) {}
+				return Rest;
+			}
+		}
+	},
+	
 	
 	ExpectsDisk {
 		@Override
