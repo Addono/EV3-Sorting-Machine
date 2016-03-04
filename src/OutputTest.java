@@ -48,7 +48,7 @@ public class OutputTest {
 				LCD.drawString("Motor Sort Black", 3, 0);
 			
 				if(enterButtonPressed) {
-					o.MotorSortBlack();
+					o.motorSortBlack();
 				}
 				break;
 
@@ -56,7 +56,7 @@ public class OutputTest {
 				LCD.drawString("Motor Sort White", 3, 0);
 				
 				if(enterButtonPressed) {
-					o.MotorSortWhite();
+					o.motorSortWhite();
 				}
 				break;
 			}
