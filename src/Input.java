@@ -1,8 +1,4 @@
-import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
-import lejos.hardware.Keys;
-import lejos.hardware.ev3.EV3;
-import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3TouchSensor;
@@ -12,22 +8,15 @@ public class Input {
 	// Store the state variables object.
 	private StateVariables sv;
 	
-	// Initialize variables for the brick.
-	private EV3 ev3 = (EV3) BrickFinder.getLocal();
-	private TextLCD lcd = ev3.getTextLCD();
-	
 	// Initialize variables for the color variables.
 	private EV3ColorSensor color;
-	private SampleProvider colorRGB, colorRed;
+	private SampleProvider colorRGB;
 	private float[] RGB = new float[3];
-	private float[] redArray = new float[1];
-	private float red;
 	private float RGBAvg, redPer, bluePer, greenPer;
 	
 	// Initialize variables for the touch sensor and buttons. 
 	private EV3TouchSensor touchSensor;
 	private float[] isTouched = new float[1];
-	private Keys keys = ev3.getKeys();
 	
 	public Input(StateVariables sv) {
 		this.sv = sv;
@@ -35,7 +24,6 @@ public class Input {
 		// Initialize color objects.
 		color = new EV3ColorSensor(SensorPort.S1);
 		colorRGB = color.getRGBMode();
-		colorRed = color.getRedMode();
 		
 		// Initialize touch objects.
 		touchSensor = new EV3TouchSensor(SensorPort.S2);
@@ -51,8 +39,6 @@ public class Input {
 	 */
 	public void updateColor() { // Change to boolean to return if success full?
 		colorRGB.fetchSample(RGB, 0); // Get the RGB values.
-		colorRed.fetchSample(redArray, 0);
-		red = redArray[0];
 		
 		RGBAvg = (RGB[0] + RGB[1] + RGB[2]) / 3;
 		redPer = 100*RGB[0] / (3 * RGBAvg);
@@ -144,6 +130,4 @@ public class Input {
 	public boolean counterGreaterThanZero() {
 		return sv.counterGreaterThanZero();
 	}
-	
-	
 }
