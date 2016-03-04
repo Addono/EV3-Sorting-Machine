@@ -71,12 +71,14 @@ public class Output {
 	
 	public void MotorSortBlack()  // When the colorsensor detects a black disk, turn one right.
 	{
-		Motor.A.rotate(288, false);
+		Motor.A.rotate(turndegrees, false);
 	}
 	
 	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left.
-		Motor.A.rotate(-288, false);
+		Motor.A.rotate(-turndegrees, false);
 	}
+	
+	// 				HANDLE STATE VARIABLES
 	
 	public void decreaseCounter() {
 		sv.decreaseCounter();
