@@ -50,7 +50,7 @@ enum States implements State {
 	
 	AcceptDisk2 {
 		@Override
-		public State next(Input input) {
+		public State next(Input i) {
 			//display the state, count
 			//thus needs counter as input
 			if (countIsGreaterThanZero()) {
@@ -83,7 +83,7 @@ enum States implements State {
 	
 	WaitForButton { //sample
 		@Override
-		public State next(Input input) {
+		public State next(Input i) {
 			if (input.buttonSSDown()) {
 				return Rest;
 			}
@@ -95,7 +95,7 @@ enum States implements State {
 	
 	Exit {
 		@Override 
-		public State next(Input input) {
+		public State next(Input i) {
 			return Exit;
 		}
 	}
