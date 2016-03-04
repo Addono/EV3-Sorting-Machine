@@ -13,6 +13,7 @@ import lejos.utility.Delay;
 public class Output {
 	// Store the state variables object.
 	private StateVariables sv;
+	private int 288;
 	
 	public Output(StateVariables sv) {
 		this.sv = sv;
@@ -65,10 +66,10 @@ public class Output {
 	
 	public void MotorSortBlack()  // When the colorsensor detects a black disk, turn one right.
 	{
-		Motor.A.rotate(216, false);
+		Motor.A.rotate(turndegrees, false);
 	}
 	
 	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left.
-		Motor.A.rotate(-216, false);
+		Motor.A.rotate(turndegrees, false);
 	}
 }
