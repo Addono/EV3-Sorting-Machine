@@ -11,11 +11,27 @@ enum States implements State {
 	Rest {
 		@Override
 		public State next(Input i, Output o) {
-			// Ask user to press enter if tube is empty
-			if (i.buttonSSDown()) {
+			o.AskIfEmpty(); //is the time empty?
+			if (i.buttonYesDown()) {
 				return Waiting;
+			} else if(i.buttonNoDown()) {
+				return CheckDiskPresent;
 			} else {
-			return Rest;
+				return Rest;
+			}
+		}
+	},
+	
+	CheckDiskPresent {
+		@Override
+		public State next(Input i, Output o) {
+			i.updateColor();
+			if (i.colorSensorGrey()) {
+				return Waiting;
+			} else if (i.colorSensorBlack() || i.colorSensorWhite()) {
+				return SortDisksNoCounting;
+			} else {
+				return CheckDiskPresent;
 			}
 		}
 	},
@@ -23,7 +39,11 @@ enum States implements State {
 	Waiting {
 		@Override
 		public State next(Input i, Output o) {
-			// Display nr. of inserted disks and enter to start the sorting
+			if (!CountIsGreaterThanZero()) {
+					o.WaitForInput();
+			} else {
+				// Display nr. of inserted disks and enter to start the sorting
+			}
 			if (i.touchDown()) {
 				//count++
 				return DiskAdd;
@@ -99,13 +119,13 @@ enum States implements State {
 			//display nr of disks, plus nr of black and white
 			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
 				//do count--
-				//do motor angle++
+				o.MotorSortWhite();
 				//do white counter++
 				//wait until done
 				return AcceptDisk2;
 			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
 				//do count--
-				//do motor angle--
+				o.MotorSortBlack();
 				//do black counter++
 				//wait until done
 				return AcceptDisk2;
