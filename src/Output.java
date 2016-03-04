@@ -56,7 +56,7 @@ public class Output {
 	}
 	public void AnotherColor()
 	{
-		currentMessage = "Different color disk";
+		currentMessage = "Different color than expected, wrong type of disk?";
 	}
 	public void StuckInTube() {
 		currentMessage = "Earlier done than expected, disk stuck?";
@@ -81,6 +81,12 @@ public class Output {
 	}
 	public void increaseBlackCounter() {
 		sv.increaseBlackCounter();
+	}
+	public void increaseWhiteCounter() {
+		sv.increaseWhiteCounter();
+	}
+	public void increaseCounter() {
+		sv.increaseCounter();
 	}
 	
 }
