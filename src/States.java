@@ -3,7 +3,7 @@
 enum States implements State {
 	Initial {
 		@Override
-		public State next(Input input) {
+		public State next(Input i) {
 			return WaitForButton;
 		}
 	},
@@ -64,18 +64,26 @@ enum States implements State {
 	ExpectsDisk {
 		@Override
 		public State next(Input i) {
-			i.updateColor();
-			
-			//input from the color sensor
-			//display nr of disks, plus nr of black en white
+			i.updateColor(); //input from the color sensor
+			//display nr of disks, plus nr of black and white
 			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
 				//do count--
 				//do motor angle++
-				//do black counter++
+				//do white counter++
 				//wait until done
 				return AcceptDisk2;
 			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
+				//do count--
+				//do motor angle--
+				//do black counter++
+				//wait until done
 				return AcceptDisk2;
+			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
+				//say it is done
+				return Rest;
+			} else {//all three are false
+				//say something is wrong
+				return Rest;
 			}
 			
 		}
@@ -84,7 +92,7 @@ enum States implements State {
 	WaitForButton { //sample
 		@Override
 		public State next(Input i) {
-			if (input.buttonSSDown()) {
+			if (i.buttonSSDown()) {
 				return Rest;
 			}
 			
