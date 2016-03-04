@@ -36,16 +36,30 @@ enum States implements State {
 		}
 	},
 	
+	SortDisksNoCounting {
+		@Override
+		public State next(Input i, Output o) {
+			i.updateColor();
+			if (i.colorSensorGrey()) {
+				return CheckDiskPresent;
+			} else if (i.colorSensorBlack()) {
+				o.MotorSortBlack();
+				//black counter++
+				return 
+			}
+		}
+	},
+	
 	Waiting {
 		@Override
 		public State next(Input i, Output o) {
-			if (!CountIsGreaterThanZero()) {
+			if (!CounterGreaterThanZero()) {
 					o.WaitForInput();
 			} else {
 				// Display nr. of inserted disks and enter to start the sorting
 			}
 			if (i.touchDown()) {
-				//count++
+				increaseCounter();
 				return DiskAdd;
 			}
 			if (i.buttonSSDown()) {
@@ -72,7 +86,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			//display the state, count
 			//thus needs counter as input
-			if (countIsGreaterThanZero()) {
+			if (CounterGreaterThanZero()) {
 				return ExpectsDisk;
 			} else {
 				return ExpectsFinished;
