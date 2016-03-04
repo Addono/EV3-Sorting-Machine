@@ -1,4 +1,4 @@
-import lejos.hardware.lcd.LCD;
+	import lejos.hardware.lcd.LCD;
 
 enum States implements State {
 	Initial {
