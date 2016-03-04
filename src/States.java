@@ -62,19 +62,32 @@ enum States implements State {
 	
 	ExpectsFinished {
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			i.updateColor();
 			if (i.colorSensorBlack() || i.colorSensorWhite()) {
-				//unexpected error
+				o.AskUser();
 				return AskUser;
 			} else {
-				//ask user if tube is empty
-				while (!i.buttonYesDown()) {}
-				return Rest;
+				o.TubeEmpty(); //press any button to continue
+				while (!i.buttonYesDown() && !i.buttonNoDown() && !i.buttonSSDown()) {}
+					return Rest;
 			}
 		}
 	},
 	
+	AskUser {
+		@Override
+		public State next(Input i, Output o) {
+			if (i.buttonYesDown()) {
+				return Rest;
+			} else if (i.buttonNoDown()) {
+				return AcceptDisk2;
+			} else {
+				return AskUser;
+			}
+			
+		}
+	},
 	
 	ExpectsDisk {
 		@Override
