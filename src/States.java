@@ -4,7 +4,7 @@ enum States implements State {
 	Initial {
 		@Override
 		public State next(Input i, Output o) {
-			return WaitForButton;
+			return Rest;
 		}
 	},
 	
@@ -44,11 +44,13 @@ enum States implements State {
 				return CheckDiskPresent;
 			} else if (i.colorSensorBlack()) {
 				o.MotorSortBlack();
-				//black counter++
+				o.increaseBlackCounter();
+				//wait until done
 				return SortDisksNoCounting;
 			} else if (i.colorSensorWhite()) {
 				o.MotorSortWhite();
-				//white counter++
+				o.increaseWhiteCounter();
+				//wait until done
 				return SortDisksNoCounting;
 			} else {
 				return SortDisksNoCounting;
@@ -65,7 +67,7 @@ enum States implements State {
 				// Display nr. of inserted disks and enter to start the sorting
 			}
 			if (i.touchDown()) {
-				increaseCounter();
+				o.increaseCounter();
 				return DiskAdd;
 			}
 			if (i.buttonSSDown()) {
@@ -90,8 +92,7 @@ enum States implements State {
 	AcceptDisk2 {
 		@Override
 		public State next(Input i, Output o) {
-			//display the state, count
-			//thus needs counter as input
+			//display count
 			if (i.counterGreaterThanZero()) {
 				return ExpectsDisk;
 			} else {
@@ -138,39 +139,30 @@ enum States implements State {
 			i.updateColor(); //input from the color sensor
 			//display nr of disks, plus nr of black and white
 			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
-				//do count--
+				o.decreaseCounter();
 				o.MotorSortWhite();
-				//do white counter++
+				o.increaseWhiteCounter();
 				//wait until done
 				return AcceptDisk2;
 			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
-				//do count--
+				o.decreaseCounter();
 				o.MotorSortBlack();
-				//do black counter++
+				o.increaseBlackCounter();
 				//wait until done
 				return AcceptDisk2;
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
-				//say it is done
+				o.StuckInTube();
+				//wait a bit
 				return Rest;
 			} else {//all three are false
-				//say something is wrong
+				o.AnotherColor();
+				//wait a bit
 				return Rest;
 			}
 			
 		}
 	},
 	
-	WaitForButton { //sample
-		@Override
-		public State next(Input i, Output o) {
-			if (i.buttonSSDown()) {
-				return Rest;
-			}
-			
-			LCD.drawString("Waiting for a button", 0, 0);
-			return WaitForButton; 
-		}
-	},
 	
 	Exit {
 		@Override 

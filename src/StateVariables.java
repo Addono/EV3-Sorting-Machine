@@ -26,6 +26,10 @@ public class StateVariables {
 		diskcounter++;
 	}
 
+	public void decreaseCounter() {
+		diskcounter--;
+	}
+	
 	public void increaseWhiteCounter() { // increase the whitecounter
 		whitecounter++;
 	}
