@@ -54,7 +54,7 @@ public class Output {
 		LCD.drawString(currentMessage, 0, 0);
 	}
 	
-	public void MotorSortBlack()  // When the colorsensor detects a black disk, turn one right
+	public void MotorSortBlack()  // When the colorsensor detects a black disk, turn one right.
 	{
 		Motor.A.rotate(216, false);
 	}
