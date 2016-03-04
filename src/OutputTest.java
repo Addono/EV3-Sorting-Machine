@@ -38,7 +38,9 @@ public class OutputTest {
 			
 			// Start drawing on the screen.
 			LCD.clear();
-			LCD.drawString("Press Enter to run", 1, 5);
+			LCD.drawString("Press Enter to run", 0, 5);
+			LCD.drawString("Use left and right", 0, 6);
+			LCD.drawString("to change current output.", 0, 7);
 			
 			// Page specific content.
 			switch(menu % 2) {
