@@ -14,7 +14,10 @@ public class Output {
 	String currentMessage = "";
 	public void TubeEmpty()
 	{
-		currentMessage = "Tube is empty!";
+		currentMessage = "Tube is empty! Press any button";
+	}
+	public void AskIfEmpty() {
+		currentMessage = "Is the tube empty? Yes or No?";
 	}
 	public void TubeNotEmpty()
 	{
@@ -22,7 +25,7 @@ public class Output {
 	}
 	public void AskUser()
 	{
-		currentMessage = "Disk detected(error).Break?";
+		currentMessage = "Tube should be empty but disk detected, should the machine stop?";
 	}
 	public void Break()
 	{
