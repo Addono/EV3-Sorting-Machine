@@ -1,53 +1,89 @@
 public class StateVariables {
 
-	private int diskcounter = 0; //counter that will get increased when you put in a disk
-	private int whitecounter = 0; // counter that will get increased when a white disk is sorted
-	private int blackcounter = 0; // counter that will get increased when a black disk is sorted
+	private int diskCounter = 0; // A counter that stores the amount of disks currently in the tube.
+	private int whiteDiskCounter = 0; // A counter that stores the amount of sorted white disks.
+	private int blackDiskCounter = 0; // A counter that stores the amount of sorted black disks.
 	
-	// Constructor
-	public StateVariables() {
-		
-	}
+	public StateVariables() {}
 	
 	// 				INPUT
 	
+	/*
+	 * Return if disks are expected in the tube.
+	 * @return	True if more disks where expected, else false.
+	 */
 	public boolean counterGreaterThanZero() {  // boolean function that returns true when diskcounter is greater than 0
-		if (diskcounter > 0){
+		if (diskCounter > 0){
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 	
 	// 				OUTPUT
 	
+	/*
+	 * Increment the disk counter by one.
+	 */
 	public void increaseCounter() { // increase the diskcounter
-		diskcounter++;
+		diskCounter++;
 	}
 
+	/*
+	 * Decrement the black disk counter by one.
+	 */
 	public void decreaseCounter() {
-		diskcounter--;
-	}
-	
-	public void increaseWhiteCounter() { // increase the whitecounter
-		whitecounter++;
+		diskCounter--;
 	}
 
+	/*
+	 * Increment the white disk counter by one.
+	 */
+	public void increaseWhiteCounter() { // increase the whitecounter
+		whiteDiskCounter++;
+	}
+
+	/*
+	 * Increment the black disk counter by one.
+	 */
 	public void increaseBlackCounter() { // increase the blackcounter
-		blackcounter++;
+		blackDiskCounter++;
 	}
 	
+	/*
+	 * Reset the disk counter.
+	 */
 	public void setCounterToZero() { // set diskcounter to 0 again
-		diskcounter = 0;
+		diskCounter = 0;
 	}
 	
-	public void setWhiteCounterToZero() { //set whitecounter to 0 again
-		whitecounter = 0;
+	/*
+	 * Reset the white disk counter.
+	 */
+	public void setWhiteCounterToZero() {
+		whiteDiskCounter = 0;
 	}
 	
+	/*
+	 * Reset the black disk counter.
+	 */
 	public void setBlackCounterToZero(){ // set blackcounter to 0 again
-		blackcounter = 0;
+		blackDiskCounter = 0;
+	}
+	
+	// 				SCREEN OUTPUT
+	/*
+	 * Return the value of the white disk counter.
+	 */
+	public int getWhiteDiskCount() {
+		return whiteDiskCounter;
+	}
+	
+	/*
+	 * Return the value of the black disk counter.
+	 */
+	public int getBlackDiskCount() {
+		return blackDiskCounter;
 	}
 }	
 	
