@@ -13,6 +13,9 @@ public class Main {
 			// Update the state.
 			s = s.next(input, output);
 			
+			// Update the message drawn on the screen.
+			output.setMessage();
+			
 			// Draw the current state on the screen.
 			Delay.msDelay(100);
 			LCD.drawString("Current State: ", 0, 6);
