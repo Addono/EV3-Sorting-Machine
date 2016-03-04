@@ -1,5 +1,7 @@
-import lejos.hardware.lcd.LCD;
-
+/*
+ * Defines all states, and how input and the current state define
+ * 	the output and the new current state.
+ */
 enum States implements State {
 	Initial {
 		@Override
@@ -11,50 +13,53 @@ enum States implements State {
 	Rest {
 		@Override
 		public State next(Input i, Output o) {
-			o.AskIfEmpty(); //is the time empty?
+			o.askIfEmpty(); // Ask the user if the tube is empty.
+			
 			if (i.buttonYesDown()) {
 				return Waiting;
 			} else if(i.buttonNoDown()) {
 				return CheckDiskPresent;
-			} else {
-				return Rest;
 			}
+			
+			return Rest;
 		}
 	},
 	
 	CheckDiskPresent {
 		@Override
 		public State next(Input i, Output o) {
-			i.updateColor();
+			i.updateColor(); // Sample the sensor for new color data. 
+			
 			if (i.colorSensorGrey()) {
 				return Waiting;
 			} else if (i.colorSensorBlack() || i.colorSensorWhite()) {
 				return SortDisksNoCounting;
-			} else {
-				return CheckDiskPresent;
 			}
+			
+			return CheckDiskPresent;
 		}
 	},
 	
 	SortDisksNoCounting {
 		@Override
 		public State next(Input i, Output o) {
-			i.updateColor();
+			i.updateColor(); // Sample the sensor for new color data.
+			
 			if (i.colorSensorGrey()) {
 				return CheckDiskPresent;
 			} else if (i.colorSensorBlack()) {
-				o.MotorSortBlack();
+				o.motorSortBlack();
 				o.increaseBlackCounter();
 				//wait until done
 				return SortDisksNoCounting;
 			} else if (i.colorSensorWhite()) {
-				o.MotorSortWhite();
+				o.motorSortWhite();
 				o.increaseWhiteCounter();
 				//wait until done
 				return SortDisksNoCounting;
-			} else {
-				return SortDisksNoCounting;
 			}
+			
+			return SortDisksNoCounting;
 		}
 	},
 	
@@ -62,17 +67,20 @@ enum States implements State {
 		@Override
 		public State next(Input i, Output o) {
 			if (!i.counterGreaterThanZero()) {
-					o.WaitForInput();
+					o.waitForInput();
 			} else {
 				// Display nr. of inserted disks and enter to start the sorting
 			}
+			
 			if (i.touchDown()) {
 				o.increaseCounter();
 				return DiskAdd;
 			}
+			
 			if (i.buttonSSDown()) {
 				return AcceptDisk2;
 			}
+			
 			return Waiting;
 		}
 	},
@@ -82,17 +90,16 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			if (!i.touchDown()) {
 				return Waiting;
-			} else {
-				return DiskAdd;
 			}
 			
+			return DiskAdd;
 		}
 	},
 	
 	AcceptDisk2 {
 		@Override
 		public State next(Input i, Output o) {
-			//display count
+			// Display count
 			if (i.counterGreaterThanZero()) {
 				return ExpectsDisk;
 			} else {
@@ -104,18 +111,20 @@ enum States implements State {
 	ExpectsFinished {
 		@Override
 		public State next(Input i, Output o) {
-			i.updateColor(); 
+			i.updateColor(); // Sample the sensor for new color data.
+			
 			if (i.colorSensorBlack() || i.colorSensorWhite()) {
-				o.AskUser(); //should the machine stop
+				o.askUser(); // Should the machine stop
 				return AskUser;
 			} else {
-				o.TubeEmpty(); //press any button to continue
+				o.tubeEmpty(); // Press any button to continue
+				
 				if (i.buttonYesDown() && i.buttonNoDown() && i.buttonSSDown()) {
 					return Rest;
-				} else {
-					return ExpectsFinished;
-				}
+				} 
 			}
+			
+			return ExpectsFinished;
 		}
 	},
 	
@@ -136,33 +145,33 @@ enum States implements State {
 	ExpectsDisk {
 		@Override
 		public State next(Input i, Output o) {
-			i.updateColor(); //input from the color sensor
-			//display nr of disks, plus nr of black and white
+			i.updateColor(); // Sample the sensor for new color data.
+			
+			//display nr. of disks, plus nr. of black and white
 			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
 				o.decreaseCounter();
-				o.MotorSortWhite();
+				o.motorSortWhite();
 				o.increaseWhiteCounter();
 				//wait until done
 				return AcceptDisk2;
 			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
 				o.decreaseCounter();
-				o.MotorSortBlack();
+				o.motorSortBlack();
 				o.increaseBlackCounter();
 				//wait until done
 				return AcceptDisk2;
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
-				o.StuckInTube();
+				o.stuckInTube();
 				//wait a bit
 				return Rest;
 			} else {//all three are false
-				o.AnotherColor();
+				o.anotherColor();
 				//wait a bit
 				return Rest;
 			}
 			
 		}
 	},
-	
 	
 	Exit {
 		@Override 

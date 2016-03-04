@@ -1,80 +1,84 @@
-import lejos.hardware.BrickFinder;
-import lejos.hardware.Button;
-import lejos.hardware.Keys;
-import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.LCD;
-import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.Motor;
-import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.robotics.SampleProvider;
-import lejos.utility.Delay;
 
 public class Output {
-	// Store the state variables object.
-	private StateVariables sv;
+	private StateVariables sv;	// Store the state variables object.
 
-	int turndegrees = 216;
+	private String currentMessage = ""; // Contains the message which currently should be drawn.
+	
+	private int turndegrees = 216; // 360 degrees * (24 teeth / 8 teeth) gear multiplier / 5 teeth  
 	
 	public Output(StateVariables sv) {
 		this.sv = sv;
 	}
 	
-	String currentMessage = "";
+	// 				HANDLE MESSAGE CONTROL
 	
-	public void TubeEmpty()
-	{
+	public void tubeEmpty() {
 		currentMessage = "Tube is empty! Press any button";
 	}
-	public void WaitForInput() {
+	
+	public void waitForInput() {
 		currentMessage = "The tube is empty, waiting for input";
 	}
-	public void AskIfEmpty() {
+	
+	public void askIfEmpty() {
 		currentMessage = "Is the tube empty? Yes or No?";
 	}
-	public void TubeNotEmpty()
-	{
+	
+	public void tubeNotEmpty() {
 		currentMessage = "Tube not empty.Sorting";
 	}
-	public void AskUser()
-	{
+	
+	public void askUser() {
 		currentMessage = "Tube should be empty but disk detected, should the machine stop?";
 	}
-	public void Break()
-	{
+	
+	public void breakMachine() {
 		currentMessage = "Break. Resting..";
 	}
-	public void NotBreak()
-	{
+	
+	public void notBreak() {
 		currentMessage = "No break. Sorting..";
 	}
-	public void Start()
-	{
+	
+	public void start() {
 		currentMessage = "Starting..";
 	}
-	public void NoDisk()
-	{
+	
+	public void noDisk() {
 		currentMessage = "No disk detected";
 	}
-	public void AnotherColor()
-	{
+	
+	public void anotherColor() {
 		currentMessage = "Different color than expected, wrong type of disk?";
 	}
-	public void StuckInTube() {
+	
+	public void stuckInTube() {
 		currentMessage = "Earlier done than expected, disk stuck?";
 	}
-	public void setMessage()
-	{
-		LCD.clearDisplay();
-		LCD.drawString(currentMessage, 0, 0);
-	}
 	
-	public void MotorSortBlack()  // When the colorsensor detects a black disk, turn one right.
-	{
+	/*
+	 * Draw the currently active message on the screen.
+	 */
+	public void setMessage() {
+		LCD.clearDisplay();						// Clear the screen prior drawing.
+		LCD.drawString(currentMessage, 0, 0);   // Draw the message.
+	}
+
+	// 				HANDLE MOTOR CONTROL
+	
+	/*
+	 * When the color sensor detects a black disk, turn one right.
+	 */
+	public void motorSortBlack() {
 		Motor.A.rotate(turndegrees, false);
 	}
 	
-	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left.
+	/*
+	 * When the color sensor detects a white disk, turn one left.
+	 */
+	public void motorSortWhite() {
 		Motor.A.rotate(-turndegrees, false);
 	}
 	
