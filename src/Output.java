@@ -4,6 +4,7 @@ import lejos.hardware.Keys;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.lcd.TextLCD;
+import lejos.hardware.motor.Motor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
@@ -51,5 +52,14 @@ public class Output {
 	{
 		LCD.clearDisplay();
 		LCD.drawString(currentMessage, 0, 0);
+	}
+	
+	public void MotorSortBlack()  // When the colorsensor detects a black disk, turn one right.
+	{
+		Motor.A.rotate(216, false);
+	}
+	
+	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left.
+		Motor.A.rotate(-216, false);
 	}
 }
