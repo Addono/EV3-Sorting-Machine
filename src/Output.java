@@ -13,7 +13,7 @@ import lejos.utility.Delay;
 public class Output {
 	// Store the state variables object.
 	private StateVariables sv;
-	private int 288;
+	private int turndegrees 288;
 	
 	public Output(StateVariables sv) {
 		this.sv = sv;
