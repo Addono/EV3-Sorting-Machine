@@ -33,7 +33,7 @@ public class Input {
 		touchSensor = new EV3TouchSensor(SensorPort.S2);
 	}
 	
-	// Handle color input
+	// 				HANDLE COLOR INPUT
 	
 	/*
 	 * Fetches new colors from the sensor which replace the old values.
@@ -52,25 +52,42 @@ public class Input {
 		greenPer = 100*RGB[2] / (3 * RGBAvg);
 	}
 	
+	/*
+	 * Returns if the red teeth of the sorting wheel are in front of the color sensor.
+	 * @input	True if the red part of the sorting wheel is in front of the sensor
+	 * 			false if it isn't.
+	 */
 	public boolean colorSensorRed() {
 		return redPer > 30;
 	}
 	
+	/*
+	 * Returns if a white disk is in front of the sorting wheel.
+	 * @input	True if the disk in front of the sensor is white, else false.
+	 */
 	public boolean colorSensorWhite() {
 		return RGBAvg >= .2;
 	}
 	
+	/*
+	 * Returns if a black disk is in front of the sorting wheel.
+	 * @input	True if the disk in front of the sensor is black, else false.
+	 */
 	public boolean colorSensorBlack() {
 		return .2 > RGBAvg && RGBAvg >= .03;
 	}
 	
+	/*
+	 * Returns if no disk is in front of the sorting wheel.
+	 * @input	True if no disk is in front of the sensor, else false.
+	 */
 	public boolean colorSensorGrey() {
 		return RGBAvg < .03;
 	}
 	
 	/*
 	 * Checks if the touch sensor is pressed.
-	 * @output	True if the sensor is pressed, false if it isn't.
+	 * @input	True if the sensor is pressed, false if it isn't.
 	 */
 	public boolean touchDown() {
 		// Get new values from the touch sensor.
@@ -84,15 +101,28 @@ public class Input {
 		}
 	}
 	
-	// Handle all button input.
+	// 				HANDLE TOUCH INPUT
+	
+	/*
+	 * Returns if the start/stop button is pressed.
+	 * @return	True if the start/stop button is pressed, false if it isn't.  
+	 */
 	public boolean buttonSSDown() {
 		return Button.ENTER.isDown();
 	}
 	
+	/*
+	 * Returns if the Yes button is pressed.
+	 * @return	True if the Yes button is pressed, false if it isn't.  
+	 */
 	public boolean buttonYesDown() {
 		return Button.RIGHT.isDown();
 	}
 	
+	/*
+	 * Returns if the No button is pressed.
+	 * @return	True if the No button is pressed, false if it isn't.  
+	 */
 	public boolean buttonNoDown() {
 		return Button.LEFT.isDown();
 	}
