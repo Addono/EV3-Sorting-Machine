@@ -5,7 +5,8 @@ import lejos.utility.Delay;
 public class OutputTest {
 
 	public static void main(String[] args) {
-		Output o = new Output();
+		StateVariables sv = new StateVariables();
+		Output o = new Output(sv);
 		
 		int menu = 1; // Stores which page is currently on top.
 		

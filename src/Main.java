@@ -6,8 +6,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		State s = States.Initial;     // Set the initial state.
-		Input input = new Input();    // Create the input object.
-		Output output = new Output(); // Create the output object.
+		StateVariables sv = new StateVariables(); // Create new state variables object.
+		Input input = new Input(sv);    // Create the input object.
+		Output output = new Output(sv); // Create the output object.
 		
 		for(;!(s instanceof FinalState) && !Button.ESCAPE.isDown();) {
 			// Update the state.

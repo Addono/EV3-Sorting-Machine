@@ -5,7 +5,8 @@ import lejos.utility.Delay;
 public class InputTest {
 
 	public static void main(String[] args) {
-		Input input = new Input();
+		StateVariables sv = new StateVariables();
+		Input input = new Input(sv);
 		int menu = 1;
 		
 		boolean leftButtonOld = false;

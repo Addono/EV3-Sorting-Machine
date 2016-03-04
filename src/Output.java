@@ -11,6 +11,12 @@ import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
 
 public class Output {
+	// Store the state variables object.
+	StateVariables sv;
+	
+	public Output(StateVariables sv) {
+		this.sv = sv;
+	}
 	
 	String currentMessage = "";
 	public void TubeEmpty()

@@ -9,6 +9,9 @@ import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.robotics.SampleProvider;
 
 public class Input {
+	// Store the state variables object.
+	StateVariables sv;
+	
 	// Initialize variables for the brick.
 	private EV3 ev3 = (EV3) BrickFinder.getLocal();
 	private TextLCD lcd = ev3.getTextLCD();
@@ -26,7 +29,9 @@ public class Input {
 	private float[] isTouched = new float[1];
 	private Keys keys = ev3.getKeys();
 	
-	public Input() {
+	public Input(StateVariables sv) {
+		this.sv = sv;
+		
 		// Initialize color objects.
 		color = new EV3ColorSensor(SensorPort.S1);
 		colorRGB = color.getRGBMode();
