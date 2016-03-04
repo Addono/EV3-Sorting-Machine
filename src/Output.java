@@ -56,7 +56,7 @@ public class Output {
 		Motor.A.rotate(216, false);
 	}
 	
-	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left
+	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left.
 		Motor.A.rotate(-216, false);
 	}
 }
