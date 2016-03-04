@@ -45,7 +45,13 @@ enum States implements State {
 			} else if (i.colorSensorBlack()) {
 				o.MotorSortBlack();
 				//black counter++
-				return 
+				return SortDisksNoCounting;
+			} else if (i.colorSensorWhite()) {
+				o.MotorSortWhite();
+				//white counter++
+				return SortDisksNoCounting;
+			} else {
+				return SortDisksNoCounting;
 			}
 		}
 	},
@@ -53,7 +59,7 @@ enum States implements State {
 	Waiting {
 		@Override
 		public State next(Input i, Output o) {
-			if (!CounterGreaterThanZero()) {
+			if (!i.counterGreaterThanZero()) {
 					o.WaitForInput();
 			} else {
 				// Display nr. of inserted disks and enter to start the sorting
@@ -86,7 +92,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			//display the state, count
 			//thus needs counter as input
-			if (CounterGreaterThanZero()) {
+			if (i.counterGreaterThanZero()) {
 				return ExpectsDisk;
 			} else {
 				return ExpectsFinished;
