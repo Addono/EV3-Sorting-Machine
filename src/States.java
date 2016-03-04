@@ -1,16 +1,16 @@
-	import lejos.hardware.lcd.LCD;
+import lejos.hardware.lcd.LCD;
 
 enum States implements State {
 	Initial {
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			return WaitForButton;
 		}
 	},
 	
 	Rest {
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			// Ask user to press enter if tube is empty
 			if (i.buttonSSDown()) {
 				return Waiting;
@@ -22,7 +22,7 @@ enum States implements State {
 	
 	Waiting {
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			// Display nr. of inserted disks and enter to start the sorting
 			if (i.touchDown()) {
 				//count++
@@ -37,7 +37,7 @@ enum States implements State {
 	
 	DiskAdd {
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			if (!i.touchDown()) {
 				return Waiting;
 			} else {
@@ -49,7 +49,7 @@ enum States implements State {
 	
 	AcceptDisk2 {
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			//display the state, count
 			//thus needs counter as input
 			if (countIsGreaterThanZero()) {
@@ -78,7 +78,7 @@ enum States implements State {
 	
 	ExpectsDisk {
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			i.updateColor(); //input from the color sensor
 			//display nr of disks, plus nr of black and white
 			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
@@ -106,7 +106,7 @@ enum States implements State {
 	
 	WaitForButton { //sample
 		@Override
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			if (i.buttonSSDown()) {
 				return Rest;
 			}
@@ -118,7 +118,7 @@ enum States implements State {
 	
 	Exit {
 		@Override 
-		public State next(Input i) {
+		public State next(Input i, Output o) {
 			return Exit;
 		}
 	}

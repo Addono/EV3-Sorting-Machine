@@ -5,6 +5,7 @@ import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.robotics.SampleProvider;
 
 public class Input {
@@ -19,12 +20,17 @@ public class Input {
 	float red;
 	float RGBAvg, redPer, bluePer, greenPer;
 	
+	EV3TouchSensor touchSensor;
+	float[] isTouched = new float[1];
+	
 	public Input() {
 		// Initialize color objects.
-		
 		color = new EV3ColorSensor(SensorPort.S1);
 		colorRGB = color.getRGBMode();
 		colorRed = color.getRedMode();
+		
+		// Initialize touch objects.
+		touchSensor = new EV3TouchSensor(SensorPort.S2);
 	}
 	
 	// Handle color input
@@ -67,7 +73,15 @@ public class Input {
 	 * @output	True if the sensor is pressed, false if it isn't.
 	 */
 	public boolean touchDown() {
-		return false;
+		// Get new values from the touch sensor.
+		touchSensor.fetchSample(isTouched, 0);
+		
+		// Convert result of the touch sensor to a boolean value.
+		if(isTouched[0] == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	// Handle all button input.
