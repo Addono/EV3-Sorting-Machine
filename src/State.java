@@ -1,3 +1,3 @@
 interface State {
-	public State next(Input input);
+	public State next(Input input, Output output);
 }
