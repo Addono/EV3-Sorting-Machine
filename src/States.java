@@ -63,14 +63,17 @@ enum States implements State {
 	ExpectsFinished {
 		@Override
 		public State next(Input i, Output o) {
-			i.updateColor();
+			i.updateColor(); 
 			if (i.colorSensorBlack() || i.colorSensorWhite()) {
-				o.AskUser();
+				o.AskUser(); //should the machine stop
 				return AskUser;
 			} else {
 				o.TubeEmpty(); //press any button to continue
-				while (!i.buttonYesDown() && !i.buttonNoDown() && !i.buttonSSDown()) {}
+				if (i.buttonYesDown() && i.buttonNoDown() && i.buttonSSDown()) {
 					return Rest;
+				} else {
+					return ExpectsFinished;
+				}
 			}
 		}
 	},
