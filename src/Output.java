@@ -19,6 +19,7 @@ public class Output {
 	}
 	
 	String currentMessage = "";
+	
 	public void TubeEmpty()
 	{
 		currentMessage = "Tube is empty! Press any button";
@@ -65,10 +66,10 @@ public class Output {
 	
 	public void MotorSortBlack()  // When the colorsensor detects a black disk, turn one right.
 	{
-		Motor.A.rotate(216, false);
+		Motor.A.rotate(288, false);
 	}
 	
 	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left.
-		Motor.A.rotate(-216, false);
+		Motor.A.rotate(-288, false);
 	}
 }

@@ -135,11 +135,15 @@ public class Input {
 		return Button.LEFT.isDown();
 	}
 	
+	// 				HANDLE STATE VARIABLES
+	
 	/*
 	 * Returns if the disk counter is zero.
-	 * @return	
+	 * @return	True if the disk counter is greater than zero, elso false.
 	 */
 	public boolean counterGreaterThanZero() {
 		return sv.counterGreaterThanZero();
 	}
+	
+	
 }

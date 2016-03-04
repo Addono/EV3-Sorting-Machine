@@ -9,6 +9,19 @@ public class StateVariables {
 		
 	}
 	
+	// 				INPUT
+	
+	public boolean counterGreaterThanZero() {  // boolean function that returns true when diskcounter is greater than 0
+		if (diskcounter > 0){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	// 				OUTPUT
+	
 	public void increaseCounter() { // increase the diskcounter
 		diskcounter++;
 	}
@@ -31,15 +44,6 @@ public class StateVariables {
 	
 	public void setBlackCounterToZero(){ // set blackcounter to 0 again
 		blackcounter = 0;
-	}
-	
-	public boolean counterGreaterThanZero() {  // boolean function that returns true when diskcounter is greater than 0
-		if (diskcounter > 0){
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 }	
 	
