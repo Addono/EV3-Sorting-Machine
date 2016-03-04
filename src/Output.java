@@ -12,7 +12,7 @@ import lejos.utility.Delay;
 
 public class Output {
 	// Store the state variables object.
-	StateVariables sv;
+	private StateVariables sv;
 	
 	public Output(StateVariables sv) {
 		this.sv = sv;

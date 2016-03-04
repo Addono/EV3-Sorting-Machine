@@ -33,7 +33,7 @@ public class StateVariables {
 		blackcounter = 0;
 	}
 	
-	public boolean CounterGreaterThanZero() {  // boolean function that returns true when diskcounter is greater than 0
+	public boolean counterGreaterThanZero() {  // boolean function that returns true when diskcounter is greater than 0
 		if (diskcounter > 0){
 			return true;
 		}

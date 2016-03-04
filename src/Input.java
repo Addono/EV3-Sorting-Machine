@@ -10,7 +10,7 @@ import lejos.robotics.SampleProvider;
 
 public class Input {
 	// Store the state variables object.
-	StateVariables sv;
+	private StateVariables sv;
 	
 	// Initialize variables for the brick.
 	private EV3 ev3 = (EV3) BrickFinder.getLocal();
@@ -133,5 +133,13 @@ public class Input {
 	 */
 	public boolean buttonNoDown() {
 		return Button.LEFT.isDown();
+	}
+	
+	/*
+	 * Returns if the disk counter is zero.
+	 * @return	
+	 */
+	public boolean counterGreaterThanZero() {
+		return sv.counterGreaterThanZero();
 	}
 }
