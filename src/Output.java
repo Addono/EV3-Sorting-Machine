@@ -17,6 +17,9 @@ public class Output {
 	{
 		currentMessage = "Tube is empty! Press any button";
 	}
+	public void WaitForInput() {
+		currentMessage = "The tube is empty, waiting for input";
+	}
 	public void AskIfEmpty() {
 		currentMessage = "Is the tube empty? Yes or No?";
 	}
