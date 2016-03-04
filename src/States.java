@@ -144,13 +144,14 @@ enum States implements State {
 				//wait until done
 				return AcceptDisk2;
 			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
-				//do count--
+				o.decreaseCounter();
 				o.MotorSortBlack();
-				//do black counter++
+				o.increaseBlackCounter();
 				//wait until done
 				return AcceptDisk2;
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
-				//say it is done
+				o.StuckInTube();
+				//wait a bit
 				return Rest;
 			} else {//all three are false
 				//say something is wrong
@@ -160,17 +161,6 @@ enum States implements State {
 		}
 	},
 	
-	WaitForButton { //sample
-		@Override
-		public State next(Input i, Output o) {
-			if (i.buttonSSDown()) {
-				return Rest;
-			}
-			
-			LCD.drawString("Waiting for a button", 0, 0);
-			return WaitForButton; 
-		}
-	},
 	
 	Exit {
 		@Override 

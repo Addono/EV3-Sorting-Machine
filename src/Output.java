@@ -57,6 +57,9 @@ public class Output {
 	{
 		currentMessage = "Different color disk";
 	}
+	public void StuckInTube() {
+		currentMessage = "Earlier done than expected, disk stuck?";
+	}
 	public void setMessage()
 	{
 		LCD.clearDisplay();
@@ -71,4 +74,12 @@ public class Output {
 	public void MotorSortWhite() { // When the colorsensor detects a white disk, turn one left.
 		Motor.A.rotate(-216, false);
 	}
+	
+	public void decreaseCounter() {
+		sv.decreaseCounter();
+	}
+	public void increaseBlackCounter() {
+		sv.increaseBlackCounter();
+	}
+	
 }
