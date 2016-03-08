@@ -7,35 +7,35 @@ public class Output {
 
 	private String currentMessage = ""; // Contains the message which currently should be drawn.
 
-	private int lines = 3; // max lines per output message
 	private int linechar = 19; // max characters per lines
 	private static final char NEWLINE = '\n';
-  private static final String SPACE_SEPARATOR = " ";
-  //if text has \n, \r or \t symbols it's better to split by \s+
-  private static final String SPLIT_REGEXP= "\\s+";
+	private static final String SPACE_SEPARATOR = " ";
 
-	private void breakLines(String input, int maxLineLength) {
-	    String[] tokens = input.split(SPLIT_REGEXP);
-	    //StringBuilder output = new StringBuilder(input.length());
-	    int lineLen = 0;
-			int j = 0;
-	    for (int i = 0; i < tokens.length; i++) {
-	        String word = tokens[i];
-
-	        if (lineLen + (SPACE_SEPARATOR + word).length() > maxLineLength) {
-	            if (i > 0) {
-	                j++;
-	            }
-	            lineLen = 0;
-	        }
-	        if (i < tokens.length - 1 && (lineLen + (word + SPACE_SEPARATOR).length() + tokens[i + 1].length() <=
-	                maxLineLength)) {
-	            word += SPACE_SEPARATOR;
-	        }
-	        LCD.drawString(word, lineLen, j);
-	        lineLen += word.length();
-	    }
-}
+	/*
+	 * 
+	 */
+	private void textSegment(String input, int x, int y, int width, int height) {
+		String[] words = input.split(" ");
+		int line = y;
+		int lineLength = 0;
+		String currentLine = "";
+		
+		for(int i = 0; i < words.length && line <= height; i++) {
+			
+			if(lineLength + words[i].length() >= width) {
+				LCD.drawString(currentLine, x, line);
+				
+				line++;
+				currentLine = "";
+				lineLength = 0;
+			}
+			
+			lineLength += words[i].length() + 1;
+			currentLine += words[i] + " ";
+		}
+		
+		LCD.drawString(currentLine, x, line);
+	}
 
 	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
 
@@ -97,8 +97,8 @@ public class Output {
 	 * Draw the currently active message on the screen.
 	 */
 	public void setMessage(State s) {
-		LCD.clearDisplay();						// Clear the screen prior drawing.
-		breakLines(currentMessage, linechar)  // Draw the message.
+		LCD.clearDisplay();							// Clear the screen prior drawing.
+		textSegment(currentMessage, 0, 0, 19, 3);  	// Draw the message.
 
 		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
 		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
