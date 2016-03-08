@@ -20,6 +20,10 @@ enum States implements State {
 				return Waiting;
 			} else if(i.buttonNoDown()) {
 				return CheckDiskPresent;
+			} else if (i.touchDown()) {
+				o.tooEarly();
+				while (!i.buttonNoDown() && !i.buttonSSDown() && !i.buttonYesDown()) {}
+				return CheckDiskPresent;
 			}
 			
 			return Rest;

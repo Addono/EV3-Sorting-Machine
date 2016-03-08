@@ -85,6 +85,10 @@ public class Output {
 	public void noDisk() {
 		currentMessage = "No disk detected";
 	}
+	
+	public void tooEarly() {
+		currentMessage = "Disk inserted too early, press enter to flush.";
+	}
 
 	public void anotherColor() {
 		currentMessage = "Different color, wrong type of disk?";
