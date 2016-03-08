@@ -13,7 +13,7 @@ public class StateVariables {
 	 * @return	True if more disks where expected, else false.
 	 */
 	public boolean counterGreaterThanZero() {  // boolean function that returns true when diskcounter is greater than 0
-		if (diskCounter > 0){
+		if (diskCounter > 0) {
 			return true;
 		} else {
 			return false;
@@ -84,6 +84,13 @@ public class StateVariables {
 	 */
 	public int getBlackDiskCount() {
 		return blackDiskCounter;
+	}
+	
+	/*
+	 * Return the amout of disks.
+	 */
+	public int getDiskCount() {
+		return diskCounter;
 	}
 }	
 	
