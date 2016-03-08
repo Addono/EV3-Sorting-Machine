@@ -69,7 +69,7 @@ enum States implements State {
 			if (!i.counterGreaterThanZero()) {
 				o.waitForInput();
 			} else {
-				o.EnterToSort();
+				o.enterToSort();
 			}
 			
 			if (i.touchDown()) {
