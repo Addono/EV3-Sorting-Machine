@@ -119,7 +119,7 @@ enum States implements State {
 			} else {
 				o.tubeEmpty(); // Press any button to continue
 				
-				if (i.buttonYesDown() && i.buttonNoDown() && i.buttonSSDown()) {
+				if (i.buttonYesDown() || i.buttonNoDown() || i.buttonSSDown()) {
 					return Rest;
 				} 
 			}
