@@ -69,7 +69,7 @@ enum States implements State {
 			if (!i.counterGreaterThanZero()) {
 				o.waitForInput();
 			} else {
-				o.EnterToSort();
+				o.enterToSort();
 			}
 			
 			if (i.touchDown()) {
@@ -113,7 +113,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			i.updateColor(); // Sample the sensor for new color data.
 			
-			if (i.colorSensorBlack() || i.colorSensorWhite()) {
+			if ((i.colorSensorBlack() || i.colorSensorWhite())&&!i.colorSensorGrey()) {
 				o.askUser(); // Should the machine stop
 				return AskUser;
 			} else {
@@ -131,6 +131,7 @@ enum States implements State {
 	AskUser {
 		@Override
 		public State next(Input i, Output o) {
+			o.askUser();
 			if (i.buttonYesDown()) {
 				return Rest;
 			} else if (i.buttonNoDown()) {
