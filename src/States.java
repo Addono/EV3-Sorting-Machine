@@ -67,9 +67,9 @@ enum States implements State {
 		@Override
 		public State next(Input i, Output o) {
 			if (!i.counterGreaterThanZero()) {
-					o.waitForInput();
+				o.waitForInput();
 			} else {
-				// Display nr. of inserted disks and enter to start the sorting
+				o.EnterToSort();
 			}
 			
 			if (i.touchDown()) {
