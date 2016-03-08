@@ -7,7 +7,7 @@ public class Output {
 
 	private String currentMessage = ""; // Contains the message which currently should be drawn.
 	
-	private int turndegrees = 216; // 360 degrees * (24 teeth / 8 teeth) gear multiplier / 5 teeth  
+	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth  
 	
 	public Output(StateVariables sv) {
 		this.sv = sv;
