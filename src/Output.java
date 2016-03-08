@@ -87,7 +87,7 @@ public class Output {
 	}
 
 	public void anotherColor() {
-		currentMessage = "Different color than expected, wrong type of disk?";
+		currentMessage = "Different color, wrong type of disk?";
 	}
 
 	public void stuckInTube() {
