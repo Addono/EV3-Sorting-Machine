@@ -163,12 +163,14 @@ enum States implements State {
 				return AcceptDisk2;
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
 				o.stuckInTube();
-				//wait a bit
-				return Rest;
+				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()){
+					return Rest;
+				}
 			} else {//all three are false
 				o.anotherColor();
-				//wait a bit
-				return Rest;
+				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()){
+					return Rest;
+				}
 			}
 			
 		}
