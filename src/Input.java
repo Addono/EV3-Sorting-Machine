@@ -65,7 +65,7 @@ public class Input {
 	
 	/*
 	 * Returns if a black disk is in front of the sorting wheel.
-	 * @input	True if the disk in front of the sensor is black, else false.
+	 * @input	True if the disk in front of the sensor is black.
 	 */
 	public boolean colorSensorBlack() {
 		return .2 > RGBAvg && RGBAvg >= .03;

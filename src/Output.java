@@ -1,5 +1,6 @@
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
+import lejos.utility.Delay;
 
 public class Output {
 	private StateVariables sv;	// Store the state variables object.
@@ -61,13 +62,17 @@ public class Output {
 	/*
 	 * Draw the currently active message on the screen.
 	 */
-	public void setMessage() {
+	public void setMessage(State s) {
 		LCD.clearDisplay();						// Clear the screen prior drawing.
 		LCD.drawString(currentMessage, 0, 0);   // Draw the message.
 		
 		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
 		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
 		LCD.drawString("Black : " + sv.getBlackDiskCount(), 0, 5);
+		
+		// Draw the current state on the screen.
+		LCD.drawString("Current State: ", 0, 6);
+		LCD.drawString((States)s + "", 0 , 7);
 	}
 
 	// 				HANDLE MOTOR CONTROL
@@ -77,6 +82,8 @@ public class Output {
 	 */
 	public void motorSortBlack() {
 		Motor.A.rotate(turndegrees, false);
+		
+		Delay.msDelay(500);
 	}
 	
 	/*
@@ -84,6 +91,8 @@ public class Output {
 	 */
 	public void motorSortWhite() {
 		Motor.A.rotate(-turndegrees, false);
+		
+		Delay.msDelay(500);
 	}
 	
 	// 				HANDLE STATE VARIABLES
