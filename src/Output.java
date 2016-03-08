@@ -109,5 +109,9 @@ public class Output {
 	public void increaseCounter() {
 		sv.increaseCounter();
 	}
+
+	public void setCounterToZero() {
+		sv.setCounterToZero();
+	}
 	
 }
