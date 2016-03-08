@@ -51,12 +51,10 @@ enum States implements State {
 				return CheckDiskPresent;
 			} else if (i.colorSensorBlack()) {
 				o.motorSortBlack();
-				o.increaseBlackCounter();
 				//wait until done
 				return SortDisksNoCounting;
 			} else if (i.colorSensorWhite()) {
 				o.motorSortWhite();
-				o.increaseWhiteCounter();
 				//wait until done
 				return SortDisksNoCounting;
 			}
