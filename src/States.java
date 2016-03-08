@@ -51,12 +51,17 @@ enum States implements State {
 				return CheckDiskPresent;
 			} else if (i.colorSensorBlack()) {
 				o.motorSortBlack();
-				//wait until done
 				return SortDisksNoCounting;
 			} else if (i.colorSensorWhite()) {
 				o.motorSortWhite();
-				//wait until done
 				return SortDisksNoCounting;
+			} else {
+				o.anotherColor();
+				if (i.buttonNoDown() || i.buttonYesDown() || i.buttonSSDown()) {
+					o.motorSortWhite();
+					return SortDisksNoCounting;
+				}
+				
 			}
 			
 			return SortDisksNoCounting;
@@ -135,7 +140,7 @@ enum States implements State {
 			if (i.buttonYesDown()) {
 				return Rest;
 			} else if (i.buttonNoDown()) {
-				return AcceptDisk2;
+				return ExpectsDisk;
 			} else {
 				return AskUser;
 			}
