@@ -16,6 +16,7 @@ enum States implements State {
 			o.askIfEmpty(); // Ask the user if the tube is empty.
 			
 			if (i.buttonYesDown()) {
+				o.setCounterToZero();
 				return Waiting;
 			} else if(i.buttonNoDown()) {
 				return CheckDiskPresent;
@@ -31,6 +32,7 @@ enum States implements State {
 			i.updateColor(); // Sample the sensor for new color data. 
 			
 			if (i.colorSensorGrey()&&!i.colorSensorBlack()&&!i.colorSensorWhite()) {
+				o.setCounterToZero();
 				return Waiting;
 			} else if (i.colorSensorBlack() || i.colorSensorWhite()) {
 				return SortDisksNoCounting;
@@ -49,12 +51,10 @@ enum States implements State {
 				return CheckDiskPresent;
 			} else if (i.colorSensorBlack()) {
 				o.motorSortBlack();
-				o.increaseBlackCounter();
 				//wait until done
 				return SortDisksNoCounting;
 			} else if (i.colorSensorWhite()) {
 				o.motorSortWhite();
-				o.increaseWhiteCounter();
 				//wait until done
 				return SortDisksNoCounting;
 			}
@@ -67,9 +67,9 @@ enum States implements State {
 		@Override
 		public State next(Input i, Output o) {
 			if (!i.counterGreaterThanZero()) {
-					o.waitForInput();
+				o.waitForInput();
 			} else {
-				// Display nr. of inserted disks and enter to start the sorting
+				o.EnterToSort();
 			}
 			
 			if (i.touchDown()) {
