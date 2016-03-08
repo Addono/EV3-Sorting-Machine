@@ -23,6 +23,7 @@ public class Main {
 			// Draw the current state on the screen.
 			LCD.drawString("Current State: ", 0, 6);
 			LCD.drawString((States)s + "", 0 , 7);
+			
 			Delay.msDelay(100);
 		};
 	}
