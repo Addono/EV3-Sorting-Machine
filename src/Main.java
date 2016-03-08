@@ -15,7 +15,7 @@ public class Main {
 			s = s.next(input, output);
 			
 			// Update the message drawn on the screen.
-			output.setMessage();
+			output.setMessage(s);
 			
 			// Step for step mode.
 			// Button.UP.waitForPress();

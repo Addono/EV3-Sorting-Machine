@@ -1,8 +1,10 @@
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
+import lejos.utility.Delay;
 
 public class Output {
 	private StateVariables sv;	// Store the state variables object.
+<<<<<<< HEAD
 
 	private String currentMessage = ""; // Contains the message which currently should be drawn.
 
@@ -23,6 +25,11 @@ public class Output {
 		}
 	}
 
+=======
+	private String currentMessage = ""; // Contains the message which currently should be drawn.	
+	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth  
+
+>>>>>>> origin/master
 	public Output(StateVariables sv) {
 		this.sv = sv;
 	}
@@ -84,11 +91,19 @@ public class Output {
 		breakmessage(currentMessage);
 	}
 
+<<<<<<< HEAD
+=======
+	public void EnterToSort() {
+		currentMessage = "Press Enter to start sorting";
+	}
+
+>>>>>>> origin/master
 	/*
 	 * Draw the currently active message on the screen.
 	 */
-	public void setMessage() {
+	public void setMessage(State s) {
 		LCD.clearDisplay();						// Clear the screen prior drawing.
+<<<<<<< HEAD
 	  if(currentMessage.length < linechar)
 			LCD.drawString(currentMessage, 0, 0);   // Draw the message.
 		else
@@ -103,10 +118,17 @@ public class Output {
 					i++;
 			}
 		}
+=======
+		LCD.drawString(currentMessage, 0, 0);   // Draw the message.
+>>>>>>> origin/master
 
 		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
 		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
 		LCD.drawString("Black : " + sv.getBlackDiskCount(), 0, 5);
+
+		// Draw the current state on the screen.
+		LCD.drawString("Current State: ", 0, 6);
+		LCD.drawString((States)s + "", 0 , 7);
 	}
 
 	// 				HANDLE MOTOR CONTROL
@@ -116,6 +138,8 @@ public class Output {
 	 */
 	public void motorSortBlack() {
 		Motor.A.rotate(turndegrees, false);
+
+		Delay.msDelay(500);
 	}
 
 	/*
@@ -123,6 +147,8 @@ public class Output {
 	 */
 	public void motorSortWhite() {
 		Motor.A.rotate(-turndegrees, false);
+
+		Delay.msDelay(500);
 	}
 
 	// 				HANDLE STATE VARIABLES
@@ -140,4 +166,11 @@ public class Output {
 		sv.increaseCounter();
 	}
 
+<<<<<<< HEAD
+=======
+	public void setCounterToZero() {
+		sv.setCounterToZero();
+	}
+
+>>>>>>> origin/master
 }
