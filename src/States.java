@@ -30,7 +30,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			i.updateColor(); // Sample the sensor for new color data. 
 			
-			if (i.colorSensorGrey()&&!i.colorSensorBlack()) {
+			if (i.colorSensorGrey()&&!i.colorSensorBlack()&&!i.colorSensorWhite()) {
 				return Waiting;
 			} else if (i.colorSensorBlack() || i.colorSensorWhite()) {
 				return SortDisksNoCounting;
