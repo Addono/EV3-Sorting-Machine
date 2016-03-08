@@ -9,19 +9,35 @@ public class Output {
 
 	private int lines = 3; // max lines per output message
 	private int linechar = 19; // max characters per lines
+	private static final char NEWLINE = '\n';
+  private static final String SPACE_SEPARATOR = " ";
+  //if text has \n, \r or \t symbols it's better to split by \s+
+  private static final String SPLIT_REGEXP= "\\s+";
 
-	private String[] parts = new String[20];
+	private void breakLines(String input, int maxLineLength) {
+	    String[] tokens = input.split(SPLIT_REGEXP);
+	    //StringBuilder output = new StringBuilder(input.length());
+	    int lineLen = 0;
+			int j = 0;
+	    for (int i = 0; i < tokens.length; i++) {
+	        String word = tokens[i];
 
-	private void breakmessage(String message)
-	{
-		int mlength = message.length();
-		if(mlength > linechar)
-		{
-			parts = message.split(" ");
-		}
-	}
-	
-	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth  
+	        if (lineLen + (SPACE_SEPARATOR + word).length() > maxLineLength) {
+	            if (i > 0) {
+	                j++;
+	            }
+	            lineLen = 0;
+	        }
+	        if (i < tokens.length - 1 && (lineLen + (word + SPACE_SEPARATOR).length() + tokens[i + 1].length() <=
+	                maxLineLength)) {
+	            word += SPACE_SEPARATOR;
+	        }
+	        LCD.drawString(word, lineLen, j);
+	        lineLen += word.length();
+	    }
+}
+
+	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
 
 	public Output(StateVariables sv) {
 		this.sv = sv;
@@ -31,57 +47,46 @@ public class Output {
 
 	public void tubeEmpty() {
 		currentMessage = "Tube is empty! Press any button";
-		breakmessage(currentMessage);
 	}
 
 	public void waitForInput() {
 		currentMessage = "The tube is empty, waiting for input";
-		breakmessage(currentMessage);
 	}
 
 	public void askIfEmpty() {
 		currentMessage = "Is the tube empty? Yes or No?";
-		breakmessage(currentMessage);
 	}
 
 	public void tubeNotEmpty() {
 		currentMessage = "Tube not empty.Sorting";
-		breakmessage(currentMessage);
 	}
 
 	public void askUser() {
 		currentMessage = "Tube should be empty but disk detected, should the machine stop?";
-		breakmessage(currentMessage);
 	}
 
 	public void breakMachine() {
 		currentMessage = "Break. Resting..";
-		breakmessage(currentMessage);
 	}
 
 	public void notBreak() {
 		currentMessage = "No break. Sorting..";
-		breakmessage(currentMessage);
 	}
 
 	public void start() {
 		currentMessage = "Starting..";
-		breakmessage(currentMessage);
 	}
 
 	public void noDisk() {
 		currentMessage = "No disk detected";
-		breakmessage(currentMessage);
 	}
 
 	public void anotherColor() {
 		currentMessage = "Different color than expected, wrong type of disk?";
-		breakmessage(currentMessage);
 	}
 
 	public void stuckInTube() {
 		currentMessage = "Earlier done than expected, disk stuck?";
-		breakmessage(currentMessage);
 	}
 
 	public void enterToSort() {
@@ -93,19 +98,7 @@ public class Output {
 	 */
 	public void setMessage(State s) {
 		LCD.clearDisplay();						// Clear the screen prior drawing.
-		if(currentMessage.length() < linechar) {
-			LCD.drawString(currentMessage, 0, 0);   // Draw the message.
-		} else {
-			int messcount = 0;
-			int i = 0;
-			for(String mess: parts)
-			{
-				messcount = mess.length();
-				LCD.drawString(mess + " ", 0, i);
-				if(messcount > linechar)
-					i++;
-			}
-		}
+		breakLines(currentMessage, linechar)  // Draw the message.
 
 		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
 		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
