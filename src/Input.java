@@ -68,7 +68,7 @@ public class Input {
 	 * @input	True if the disk in front of the sensor is black.
 	 */
 	public boolean colorSensorBlack() {
-		return .2 > RGBAvg && RGBAvg >= .03;
+		return .2 > RGBAvg && !colorSensorGrey();
 	}
 	
 	/*
@@ -76,7 +76,7 @@ public class Input {
 	 * @input	True if no disk is in front of the sensor, else false.
 	 */
 	public boolean colorSensorGrey() {
-		return RGBAvg < .03;
+		return redPer > 25;
 	}
 	
 	/*

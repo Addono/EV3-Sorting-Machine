@@ -12,7 +12,12 @@ public class Output {
 	private static final String SPACE_SEPARATOR = " ";
 
 	/*
-	 * 
+	 * Draws a string in a specific area.
+	 * @input	The string to be drawn.
+	 * @input	x start coordinate of the segment.
+	 * @input	y start coordinate of the segment.
+	 * @input	Width of the segment.
+	 * @input	Height of the segment.
 	 */
 	private void textSegment(String input, int x, int y, int width, int height) {
 		String[] words = input.split(" ");
@@ -20,8 +25,8 @@ public class Output {
 		int lineLength = 0;
 		String currentLine = "";
 		
-		for(int i = 0; i < words.length && line <= height; i++) {
-			
+		// Loop through all words, until all words are drawn, or the segment if 
+		for(int i = 0; i < words.length && line < height; i++) {
 			if(lineLength + words[i].length() >= width) {
 				LCD.drawString(currentLine, x, line);
 				
@@ -58,11 +63,11 @@ public class Output {
 	}
 
 	public void tubeNotEmpty() {
-		currentMessage = "Tube not empty.Sorting";
+		currentMessage = "Tube not empty. Sorting";
 	}
 
 	public void askUser() {
-		currentMessage = "Tube should be empty but disk detected, should the machine stop?";
+		currentMessage = "Unexpected disk detected, should we stop?";
 	}
 
 	public void breakMachine() {
