@@ -21,12 +21,20 @@ enum States implements State {
 			} else if(i.buttonNoDown()) {
 				return CheckDiskPresent;
 			} else if (i.touchDown()) {
-				o.tooEarly();
-				while (!i.buttonNoDown() && !i.buttonSSDown() && !i.buttonYesDown()) {}
+				return InsertedEarly;
+			}
+			return Rest;
+		}
+	},
+	
+	InsertedEarly {
+		@Override
+		public State next(Input i, Output o) {
+			o.tooEarly();
+			if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {
 				return CheckDiskPresent;
 			}
-			
-			return Rest;
+			return InsertedEarly;
 		}
 	},
 	
