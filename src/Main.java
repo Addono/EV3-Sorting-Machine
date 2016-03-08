@@ -18,12 +18,12 @@ public class Main {
 			output.setMessage();
 			
 			// Step for step mode.
-			Button.UP.waitForPress();
+			// Button.UP.waitForPress();
 			
 			// Draw the current state on the screen.
-			Delay.msDelay(100);
 			LCD.drawString("Current State: ", 0, 6);
 			LCD.drawString((States)s + "", 0 , 7);
+			Delay.msDelay(100);
 		};
 	}
 }
