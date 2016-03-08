@@ -4,32 +4,25 @@ import lejos.utility.Delay;
 
 public class Output {
 	private StateVariables sv;	// Store the state variables object.
-<<<<<<< HEAD
 
 	private String currentMessage = ""; // Contains the message which currently should be drawn.
 
-	private int turndegrees = 216; // 360 degrees * (24 teeth / 8 teeth) gear multiplier / 5 teeth
-
 	private int lines = 3; // max lines per output message
-
 	private int linechar = 19; // max characters per lines
 
 	private String[] parts = new String[20];
 
 	private void breakmessage(String message)
 	{
-		int mlength = message.length;
+		int mlength = message.length();
 		if(mlength > linechar)
 		{
 			parts = message.split(" ");
 		}
 	}
-
-=======
-	private String currentMessage = ""; // Contains the message which currently should be drawn.	
+	
 	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth  
 
->>>>>>> origin/master
 	public Output(StateVariables sv) {
 		this.sv = sv;
 	}
@@ -91,36 +84,28 @@ public class Output {
 		breakmessage(currentMessage);
 	}
 
-<<<<<<< HEAD
-=======
-	public void EnterToSort() {
+	public void enterToSort() {
 		currentMessage = "Press Enter to start sorting";
 	}
 
->>>>>>> origin/master
 	/*
 	 * Draw the currently active message on the screen.
 	 */
 	public void setMessage(State s) {
 		LCD.clearDisplay();						// Clear the screen prior drawing.
-<<<<<<< HEAD
-	  if(currentMessage.length < linechar)
+		if(currentMessage.length() < linechar) {
 			LCD.drawString(currentMessage, 0, 0);   // Draw the message.
-		else
-		{
+		} else {
 			int messcount = 0;
 			int i = 0;
 			for(String mess: parts)
 			{
-				messcount = messcount = mess.length;
+				messcount = mess.length();
 				LCD.drawString(mess + " ", 0, i);
 				if(messcount > linechar)
 					i++;
 			}
 		}
-=======
-		LCD.drawString(currentMessage, 0, 0);   // Draw the message.
->>>>>>> origin/master
 
 		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
 		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
@@ -166,11 +151,7 @@ public class Output {
 		sv.increaseCounter();
 	}
 
-<<<<<<< HEAD
-=======
 	public void setCounterToZero() {
 		sv.setCounterToZero();
 	}
-
->>>>>>> origin/master
 }
