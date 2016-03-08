@@ -126,7 +126,7 @@ public class Output {
 	public void motorSortBlack() {
 		Motor.A.rotate(turndegrees, false);
 
-		Delay.msDelay(500);
+		Delay.msDelay(300);
 	}
 
 	/*
@@ -135,7 +135,7 @@ public class Output {
 	public void motorSortWhite() {
 		Motor.A.rotate(-turndegrees, false);
 
-		Delay.msDelay(500);
+		Delay.msDelay(300);
 	}
 
 	// 				HANDLE STATE VARIABLES
