@@ -64,6 +64,10 @@ public class Output {
 	public void setMessage() {
 		LCD.clearDisplay();						// Clear the screen prior drawing.
 		LCD.drawString(currentMessage, 0, 0);   // Draw the message.
+		
+		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
+		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
+		LCD.drawString("Black : " + sv.getBlackDiskCount(), 0, 5);
 	}
 
 	// 				HANDLE MOTOR CONTROL
