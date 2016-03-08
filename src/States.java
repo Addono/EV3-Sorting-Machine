@@ -182,6 +182,7 @@ enum States implements State {
 				}
 			}
 			
+			return ExpectsDisk;
 		}
 	},
 	
