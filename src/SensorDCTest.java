@@ -21,8 +21,6 @@ public class SensorDCTest implements EV3SensorConstants {
 		ports[6] = MotorPort.C.open(ConfigurationPort.class);
 		ports[7] = MotorPort.D.open(ConfigurationPort.class);
 		
-		int counter = 0;
-		
 		int lightSensor, touchSensor, motor;
 		
 		while(!Button.ESCAPE.isDown()) {
