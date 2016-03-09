@@ -1,53 +1,96 @@
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
+import lejos.hardware.motor.NXTRegulatedMotor;
+import lejos.hardware.port.ConfigurationPort;
+import lejos.hardware.port.MotorPort;
+import lejos.hardware.port.Port;
+import lejos.hardware.sensor.EV3SensorConstants;
 import lejos.utility.Delay;
 
-public class Output {
+public class Output implements EV3SensorConstants {
 	private StateVariables sv;	// Store the state variables object.
-
 	private String currentMessage = ""; // Contains the message which currently should be drawn.
-
-	private int linechar = 19; // max characters per lines
-	private static final char NEWLINE = '\n';
-	private static final String SPACE_SEPARATOR = " ";
-
-	/*
-	 * Draws a string in a specific area.
-	 * @input	The string to be drawn.
-	 * @input	x start coordinate of the segment.
-	 * @input	y start coordinate of the segment.
-	 * @input	Width of the segment.
-	 * @input	Height of the segment.
-	 */
-	private void textSegment(String input, int x, int y, int width, int height) {
-		String[] words = input.split(" ");
-		int line = y;
-		int lineLength = 0;
-		String currentLine = "";
-		
-		// Loop through all words, until all words are drawn, or the segment if 
-		for(int i = 0; i < words.length && line < height; i++) {
-			if(lineLength + words[i].length() >= width) {
-				LCD.drawString(currentLine, x, line);
-				
-				line++;
-				currentLine = "";
-				lineLength = 0;
-			}
-			
-			lineLength += words[i].length() + 1;
-			currentLine += words[i] + " ";
-		}
-		
-		LCD.drawString(currentLine, x, line);
-	}
-
 	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
 
+	// Import motor related things.
+	private Port[] ports = new Port[4];
+	ConfigurationPort[] configPorts = new ConfigurationPort[4];
+	int motorPort;
+	NXTRegulatedMotor motor;
+	
+	// The construcator of this class.
 	public Output(StateVariables sv) {
 		this.sv = sv;
+		
+		initializeMotor();
 	}
 
+	/**
+	 * Initialize motor.
+	 */
+	void initializeMotor() {
+		// Define all ports.
+		ports[0] = MotorPort.A;
+		ports[1] = MotorPort.B;
+		ports[2] = MotorPort.C;
+		ports[3] = MotorPort.D;
+		
+		NXTRegulatedMotor[] motors = new NXTRegulatedMotor[4];
+		motors[0] = Motor.A;
+		motors[1] = Motor.B;
+		motors[2] = Motor.C;
+		motors[3] = Motor.D;
+		
+		// Open all configuration ports.
+		for(int i = 0; i < ports.length; i++) {
+			configPorts[i] = ports[i].open(ConfigurationPort.class);
+		}
+		
+		// Wait until a motor is detected.
+		updateSensors();
+		while(motorPort == -1) {
+			updateSensors();
+		}
+		
+		// Close all ports, to allow the data of the sensors to be read.
+		for(int i = 0; i < configPorts.length; i++) {
+			configPorts[i].close();
+		}
+		
+		motor = motors[motorPort];
+	}
+	
+	/**
+	 * Update sensor position. 
+	 */
+	private boolean updateSensors() {
+		motorPort = -1; // Reset all values.
+		
+		for(int i = 0; i < configPorts.length; i++) {
+			int portType = configPorts[i].getPortType();
+			
+			// Find sensor currently is in this port.
+			switch(portType) {
+			case TYPE_TACHO:
+			case TYPE_MINITACHO:
+			case TYPE_NEWTACHO:
+			case CONN_OUTPUT_TACHO:
+				if(motorPort != -1) {
+					// Throw error: Two motors connected?
+					return false;
+				}
+				
+				motorPort = i;
+				break;
+
+			case CONN_ERROR:
+				// Throw error: Unexpected sensor for this port, motor in sensor port or vice versa?
+				return false;
+			}
+		}
+		
+		return true; // Return true if no errors where detected.
+	}
 	// 				HANDLE MESSAGE CONTROL
 
 	public void tubeEmpty() {
@@ -101,6 +144,37 @@ public class Output {
 	public void enterToSort() {
 		currentMessage = "Press Enter to start sorting";
 	}
+	
+	/*
+	 * Draws a string in a specific area.
+	 * @input	The string to be drawn.
+	 * @input	x start coordinate of the segment.
+	 * @input	y start coordinate of the segment.
+	 * @input	Width of the segment.
+	 * @input	Height of the segment.
+	 */
+	private void textSegment(String input, int x, int y, int width, int height) {
+		String[] words = input.split(" ");
+		int line = y;
+		int lineLength = 0;
+		String currentLine = "";
+		
+		// Loop through all words, until all words are drawn or the screen is segment if full.
+		for(int i = 0; i < words.length && line < height; i++) {
+			if(lineLength + words[i].length() >= width) { // Check if the next word first on the screen, if it doesn't then draw the previous line and resume on the next one.
+				LCD.drawString(currentLine, x, line);
+				
+				line++;
+				currentLine = "";
+				lineLength = 0;
+			}
+			
+			lineLength += words[i].length() + 1;
+			currentLine += words[i] + " ";
+		}
+		
+		LCD.drawString(currentLine, x, line); // Draw the last line.
+	}
 
 	/*
 	 * Draw the currently active message on the screen.
@@ -124,7 +198,7 @@ public class Output {
 	 * When the color sensor detects a black disk, turn one right.
 	 */
 	public void motorSortBlack() {
-		Motor.A.rotate(turndegrees, false);
+		motor.rotate(turndegrees, false);
 
 		Delay.msDelay(300);
 	}
@@ -133,7 +207,7 @@ public class Output {
 	 * When the color sensor detects a white disk, turn one left.
 	 */
 	public void motorSortWhite() {
-		Motor.A.rotate(-turndegrees, false);
+		motor.rotate(-turndegrees, false);
 
 		Delay.msDelay(300);
 	}
