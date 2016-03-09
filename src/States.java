@@ -6,6 +6,7 @@ enum States implements State {
 	Initial {
 		@Override
 		public State next(Input i, Output o) {
+			o.setLed("orange", 1);
 			return Rest;
 		}
 	},
@@ -14,13 +15,14 @@ enum States implements State {
 		@Override
 		public State next(Input i, Output o) {
 			o.askIfEmpty(); // Ask the user if the tube is empty.
-			
 			if (i.buttonYesDown()) {
 				o.setCounterToZero();
 				return Waiting;
 			} else if(i.buttonNoDown()) {
+				o.setLed("green", 2);
 				return CheckDiskPresent;
 			} else if (i.touchDown()) {
+				o.setLed("red", 2);
 				return InsertedEarly;
 			}
 			return Rest;
@@ -32,6 +34,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			o.tooEarly();
 			if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {
+				o.setLed("green", 0);
 				return CheckDiskPresent;
 			}
 			return InsertedEarly;
@@ -45,6 +48,7 @@ enum States implements State {
 			
 			if (i.colorSensorGrey()&&!i.colorSensorBlack()&&!i.colorSensorWhite()) {
 				o.setCounterToZero();
+				o.setLed("orange", 1);
 				return Waiting;
 			} else if (i.colorSensorBlack() || i.colorSensorWhite()) {
 				return SortDisksNoCounting;
@@ -95,6 +99,7 @@ enum States implements State {
 			}
 			
 			if (i.buttonSSDown()) {
+				o.setLed("green", 0);
 				return AcceptDisk2;
 			}
 			
@@ -118,8 +123,10 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			// Display count
 			if (i.counterGreaterThanZero()) {
+				o.setLed("green", 0);
 				return ExpectsDisk;
 			} else {
+				o.setLed("orange", 1);
 				return ExpectsFinished;
 			}
 		}
@@ -132,11 +139,13 @@ enum States implements State {
 			
 			if ((i.colorSensorBlack() || i.colorSensorWhite())&&!i.colorSensorGrey()) {
 				o.askUser(); // Should the machine stop
+				o.setLed("red", 2);
 				return AskUser;
 			} else {
 				o.tubeEmpty(); // Press any button to continue
 				
 				if (i.buttonYesDown() || i.buttonNoDown() || i.buttonSSDown()) {
+					o.setLed("orange", 1);
 					return Rest;
 				} 
 			}
@@ -150,8 +159,10 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			o.askUser();
 			if (i.buttonYesDown()) {
+				o.setLed("orange", 1);
 				return Rest;
 			} else if (i.buttonNoDown()) {
+				o.setLed("green", 0);
 				return ExpectsDisk;
 			} else {
 				return AskUser;
@@ -180,12 +191,16 @@ enum States implements State {
 				return AcceptDisk2;
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
 				o.stuckInTube();
+				o.setLed("red", 2);
 				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()){
+					o.setLed("orange", 1);
 					return Rest;
 				}
 			} else {//all three are false
 				o.anotherColor();
+				o.setLed("red", 2);
 				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()){
+					o.setLed("orange", 1);
 					return Rest;
 				}
 			}

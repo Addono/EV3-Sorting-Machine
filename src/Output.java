@@ -1,16 +1,27 @@
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
+import lejos.internal.ev3.EV3LED;
 import lejos.utility.Delay;
+
+import java.awt.Color;
+
+import lejos.hardware.LED;
+import lejos.hardware.ev3.LocalEV3;
 
 public class Output {
 	private StateVariables sv;	// Store the state variables object.
 
 	private String currentMessage = ""; // Contains the message which currently should be drawn.
+	
 
+	LED led; //create led object to control it
+	
 	private int linechar = 19; // max characters per lines
 	private static final char NEWLINE = '\n';
 	private static final String SPACE_SEPARATOR = " ";
-
+	private int lastLEDSpeed;
+	private String lastLEDColor;
+	
 	/*
 	 * Draws a string in a specific area.
 	 * @input	The string to be drawn.
@@ -123,6 +134,26 @@ public class Output {
 	/*
 	 * When the color sensor detects a black disk, turn one right.
 	 */
+	
+	public void setLed(String color, int speed) {//requires a color and a speed 0, 1 or 2
+		led = LocalEV3.ev3.getLED();
+		speed *= 3; //is needed for the right number
+		
+		if (speed != lastLEDSpeed && !color.equals(lastLEDColor)){ //to make sure it's only called the first time
+			lastLEDSpeed = speed;
+			lastLEDColor = color;
+			if (color.equals("green")) {
+				led.setPattern(speed + EV3LED.COLOR_GREEN);
+			} else if (color.equals("red")) {
+				led.setPattern(speed + EV3LED.COLOR_RED);
+			} else if (color.equals("orange")) {
+				led.setPattern(speed + EV3LED.COLOR_ORANGE);
+			} else {
+				led.setPattern(0);
+			}
+		}
+	}
+	
 	public void motorSortBlack() {
 		Motor.A.rotate(turndegrees, false);
 
@@ -134,7 +165,7 @@ public class Output {
 	 */
 	public void motorSortWhite() {
 		Motor.A.rotate(-turndegrees, false);
-
+		
 		Delay.msDelay(300);
 	}
 
