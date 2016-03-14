@@ -85,6 +85,7 @@ public class Output implements EV3SensorConstants {
 	private boolean updateSensors() {
 		motorPort = -1; // Reset all values.
 		
+		// Go through all ports and read the port type from them.
 		for(int i = 0; i < configPorts.length; i++) {
 			int portType = configPorts[i].getPortType();
 			
