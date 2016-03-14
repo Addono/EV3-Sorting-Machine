@@ -3,7 +3,6 @@ import lejos.hardware.motor.Motor;
 import lejos.internal.ev3.EV3LED;
 import lejos.utility.Delay;
 
-import java.awt.Color;
 
 import lejos.hardware.LED;
 import lejos.hardware.ev3.LocalEV3;
@@ -16,9 +15,6 @@ public class Output {
 
 	LED led; //create led object to control it
 	
-	private int linechar = 19; // max characters per lines
-	private static final char NEWLINE = '\n';
-	private static final String SPACE_SEPARATOR = " ";
 	private int lastLEDSpeed;
 	private String lastLEDColor;
 	
