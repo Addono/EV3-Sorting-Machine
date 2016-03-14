@@ -154,6 +154,10 @@ public class Input implements EV3SensorConstants {
 		return redPer > 25;
 	}
 	
+	public boolean colorSensorTeeth() {
+		return redPer > 40;
+	}
+	
 	/**
 	 * Checks if the touch sensor is pressed.
 	 * @input	True if the sensor is pressed, false if it isn't.

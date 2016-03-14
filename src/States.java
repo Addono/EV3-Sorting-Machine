@@ -7,7 +7,52 @@ enum States implements State {
 		@Override
 		public State next(Input i, Output o) {
 			o.setLed("orange", 1);
-			return Rest;
+			return moveBetweenTeeth;
+		}
+	},
+	
+	moveBetweenTeeth {
+		@Override
+		public State next(Input i, Output o) {
+			i.updateColor();
+			
+			if(i.colorSensorTeeth()) {
+				o.motorTurnHalfTeeth(true);
+			}
+			
+			return findFirstPoint;
+		}
+	},
+	
+	findFirstPoint {
+		@Override
+		public State next(Input i, Output o) {
+			i.updateColor();
+			
+			if(i.colorSensorTeeth()) {
+				o.setFirstCaliPoint();
+				o.motorTurnHalfTeeth(true);
+				return findSecondPoint;
+			} else {
+				o.motorTurnSmallStep(false);
+				return findFirstPoint;
+			}
+		}
+	},
+	
+	findSecondPoint {
+		@Override
+		public State next(Input i, Output o) {
+			i.updateColor();
+			
+			if(i.colorSensorTeeth()) {
+				o.setSecondCaliPoint();
+				o.motorMoveInbetweenCaliPoints();
+				return Rest;
+			} else {
+				o.motorTurnSmallStep(true);
+				return findSecondPoint;
+			}
 		}
 	},
 	

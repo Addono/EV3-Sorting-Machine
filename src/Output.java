@@ -203,26 +203,21 @@ public class Output implements EV3SensorConstants {
 		LCD.clearDisplay();							// Clear the screen prior drawing.
 		textSegment(currentMessage, 0, 0, 19, 3);  	// Draw the message.
 
+		
 		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
 		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
 		LCD.drawString("Black : " + sv.getBlackDiskCount(), 0, 5);
-
+		
 		// Draw the current state on the screen.
 		LCD.drawString("Current State: ", 0, 6);
 		LCD.drawString((States)s + "", 0 , 7);
 	}
 
-	// 				HANDLE MOTOR CONTROL
-
-	/*
-	 * When the color sensor detects a black disk, turn one right.
-	 */
-	
-	public void setLed(String color, int speed) {//requires a color and a speed 0, 1 or 2
+	public void setLed(String color, int speed) {// Requires a color and a speed 0, 1 or 2
 		led = LocalEV3.ev3.getLED();
-		speed *= 3; //is needed for the right number
+		speed *= 3; // Is needed for the right number
 		
-		if (speed != lastLEDSpeed && !color.equals(lastLEDColor)){ //to make sure it's only called the first time
+		if (speed != lastLEDSpeed && !color.equals(lastLEDColor)){ // To make sure it's only called the first time
 			lastLEDSpeed = speed;
 			lastLEDColor = color;
 			if (color.equals("green")) {
@@ -237,13 +232,19 @@ public class Output implements EV3SensorConstants {
 		}
 	}
 	
+	// 				HANDLE MOTOR CONTROL
+
+	/**
+	 * When the color sensor detects a black disk, turn one right.
+	 */
+	
 	public void motorSortBlack() {
 		motor.rotate(turndegrees, false);
 
 		Delay.msDelay(300);
 	}
 
-	/*
+	/**
 	 * When the color sensor detects a white disk, turn one left.
 	 */
 	public void motorSortWhite() {
@@ -251,23 +252,57 @@ public class Output implements EV3SensorConstants {
 
 		Delay.msDelay(300);
 	}
+	
+	public void motorTurnSmallStep(boolean forward) {
+		int step = 1;
+		
+		if(forward) {
+			motor.rotate(step, true);
+		} else {
+			motor.rotate(-step, true);
+		}
+	}
 
+	public void motorTurnHalfTeeth(boolean forward) {
+		if(forward) {
+			motor.rotate(turndegrees / 2, false);
+		} else {
+			motor.rotate(-turndegrees / 2, false);
+		}
+	}
+	
+	public void motorMoveInbetweenCaliPoints() {
+		int targetAngle = (int) ((sv.getFirstCaliPoint() + sv.getSecondCaliPoint()) / 2f);
+		motor.rotateTo(targetAngle, false);
+	}
+	
 	// 				HANDLE STATE VARIABLES
 
 	public void decreaseCounter() {
 		sv.decreaseCounter();
 	}
+	
 	public void increaseBlackCounter() {
 		sv.increaseBlackCounter();
 	}
+	
 	public void increaseWhiteCounter() {
 		sv.increaseWhiteCounter();
 	}
+	
 	public void increaseCounter() {
 		sv.increaseCounter();
 	}
 
 	public void setCounterToZero() {
 		sv.setCounterToZero();
+	}
+	
+	public void setFirstCaliPoint() {
+		sv.setFirstCaliPoint(motor.getPosition());
+	}
+	
+	public void setSecondCaliPoint() {
+		sv.setSecondCaliPoint(motor.getPosition());
 	}
 }
