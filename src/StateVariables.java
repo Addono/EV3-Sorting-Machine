@@ -4,6 +4,9 @@ public class StateVariables {
 	private int whiteDiskCounter = 0; // A counter that stores the amount of sorted white disks.
 	private int blackDiskCounter = 0; // A counter that stores the amount of sorted black disks.
 	
+	private float firstCaliPoint;
+	private float secondCaliPoint;
+	
 	public StateVariables() {}
 	
 	// 				INPUT
@@ -21,6 +24,34 @@ public class StateVariables {
 	}
 	
 	// 				OUTPUT
+	
+	/**
+	 * Set first calibration point
+	 */
+	public void setFirstCaliPoint(float point) {
+		firstCaliPoint = point;
+	}
+	
+	/**
+	 * Set second calibration point
+	 */
+	public void setSecondCaliPoint(float point) {
+		secondCaliPoint = point;
+	}
+	
+	/**
+	 * Returns the first calibration point
+	 */
+	public float getFirstCaliPoint() {
+		return firstCaliPoint;
+	}
+	
+	/**
+	 * Returns the second calibration point
+	 */
+	public float getSecondCaliPoint() {
+		return secondCaliPoint;
+	}
 	
 	/*
 	 * Increment the disk counter by one.
