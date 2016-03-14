@@ -26,7 +26,7 @@ public class Output implements EV3SensorConstants {
 	}
 
 	/**
-	 * Initialize motor.
+	 * Initialize the motor by first looking in which port it is connected to.
 	 */
 	void initializeMotor() {
 		// Define all ports.
@@ -34,12 +34,6 @@ public class Output implements EV3SensorConstants {
 		ports[1] = MotorPort.B;
 		ports[2] = MotorPort.C;
 		ports[3] = MotorPort.D;
-		
-		NXTRegulatedMotor[] motors = new NXTRegulatedMotor[4];
-		motors[0] = Motor.A;
-		motors[1] = Motor.B;
-		motors[2] = Motor.C;
-		motors[3] = Motor.D;
 		
 		// Open all configuration ports.
 		for(int i = 0; i < ports.length; i++) {
@@ -56,6 +50,12 @@ public class Output implements EV3SensorConstants {
 		for(int i = 0; i < configPorts.length; i++) {
 			configPorts[i].close();
 		}
+		
+		NXTRegulatedMotor[] motors = new NXTRegulatedMotor[4];
+		motors[0] = Motor.A;
+		motors[1] = Motor.B;
+		motors[2] = Motor.C;
+		motors[3] = Motor.D;
 		
 		motor = motors[motorPort];
 	}
