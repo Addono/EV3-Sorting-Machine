@@ -89,7 +89,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			i.updateColor(); // Sample the sensor for new color data. 
 			
-			if (i.colorSensorGrey() && !i.colorSensorBlack() && !i.colorSensorWhite()) {
+			if (i.colorSensorIsNoDisk() && !i.colorSensorBlack() && !i.colorSensorWhite()) {
 				o.setCounterToZero();
 				return Waiting;
 			} else if (i.colorSensorBlack() || i.colorSensorWhite()) {
@@ -105,7 +105,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			i.updateColor(); // Sample the sensor for new color data.
 			
-			if (i.colorSensorGrey()) {
+			if (i.colorSensorIsNoDisk()) {
 				return CheckDiskPresent;
 			} else if (i.colorSensorBlack()) {
 				o.motorSortBlack();
@@ -175,7 +175,7 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			i.updateColor(); // Sample the sensor for new color data.
 			
-			if ((i.colorSensorBlack() || i.colorSensorWhite()) && !i.colorSensorGrey()) {
+			if ((i.colorSensorBlack() || i.colorSensorWhite()) && !i.colorSensorIsNoDisk()) {
 				o.askUser(); // Should the machine stop
 				return AskUser;
 			} else {
@@ -212,17 +212,17 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			i.updateColor(); // Sample the sensor for new color data.
 			
-			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
+			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorIsNoDisk()) {
 				o.decreaseCounter();
 				o.motorSortWhite();
 				o.increaseWhiteCounter();
 				return AcceptDisk2;
-			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
+			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorIsNoDisk()) {
 				o.decreaseCounter();
 				o.motorSortBlack();
 				o.increaseBlackCounter();
 				return AcceptDisk2;
-			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
+			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorIsNoDisk()) {
 				o.stuckInTube();
 				
 				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {

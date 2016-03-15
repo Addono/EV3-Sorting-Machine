@@ -143,15 +143,15 @@ public class Input implements EV3SensorConstants {
 	 * @input	True if the disk in front of the sensor is black.
 	 */
 	public boolean colorSensorBlack() {
-		return .2 > RGBAvg && !colorSensorGrey();
+		return .2 > RGBAvg && !colorSensorIsNoDisk();
 	}
 	
 	/**
 	 * Returns if no disk is in front of the sorting wheel.
 	 * @input	True if no disk is in front of the sensor, else false.
 	 */
-	public boolean colorSensorGrey() {
-		return redPer > 25;
+	public boolean colorSensorIsNoDisk() {
+		return redPer > 25 && redPer <= 45;
 	}
 	
 	public boolean colorSensorTeeth() {
