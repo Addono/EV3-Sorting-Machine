@@ -11,19 +11,22 @@ import lejos.hardware.sensor.EV3SensorConstants;
 
 public class Output implements EV3SensorConstants {
 	private StateVariables sv;	// Store the state variables object.
-	private String currentMessage = ""; // Contains the message which currently should be drawn.
-	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
 	
-	LED led; // Create led object to control it
+	private String currentMessage = ""; // Contains the message which currently should be drawn, initially empty.
+	
+	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
+	private float smallStepSize = 1; // Define the size of a small step as an angle in degrees.
+	
+	private LED led; // Create led object to control it
 	
 	private int lastLEDSpeed = -1;
 	private String lastLEDColor = null;
 
 	// Import motor related things.
 	private Port[] ports = new Port[4];
-	ConfigurationPort[] configPorts = new ConfigurationPort[4];
-	int motorPort;
-	NXTRegulatedMotor motor;
+	private ConfigurationPort[] configPorts = new ConfigurationPort[4];
+	private int motorPort;					// Stores the number of the motor port on which the motor is detected.
+	private NXTRegulatedMotor motor;		// The motor object which is connected to the wheel.
 	
 	// The constructor of this class.
 	public Output(StateVariables sv) {
@@ -35,7 +38,7 @@ public class Output implements EV3SensorConstants {
 	/**
 	 * Initialize the motor by first looking in which port it is.
 	 */
-	void initializeMotor() {
+	private void initializeMotor() {
 		// Define all ports.
 		ports[0] = MotorPort.A;
 		ports[1] = MotorPort.B;
@@ -112,6 +115,7 @@ public class Output implements EV3SensorConstants {
 		
 		return true; // Return true if no errors where detected.
 	}
+	
 	// 				HANDLE MESSAGE CONTROL
 
 	public void tubeEmpty() {
@@ -273,8 +277,6 @@ public class Output implements EV3SensorConstants {
 	
 	public void motorSortBlack() {
 		motor.rotate(turndegrees, false);
-
-		// Delay.msDelay(100);
 	}
 
 	/**
@@ -282,22 +284,22 @@ public class Output implements EV3SensorConstants {
 	 */
 	public void motorSortWhite() {
 		motor.rotate(-turndegrees, false);
-
-		// Delay.msDelay(300);
 	}
 	
-	public void motorTurnSmallStep(boolean forward) {
-		int step = 1;
-		
-		if(forward) {
-			motor.rotate(step, true);
+	public void motorTurnSmallStep(boolean left) {
+		if(left) {
+			motor.rotate(smallStepSize, true);
 		} else {
-			motor.rotate(-step, true);
+			motor.rotate(-smallStepSize, true);
 		}
 	}
 
-	public void motorTurnHalfTeeth(boolean forward) {
-		if(forward) {
+	/**
+	 * Let the motor run for half a teeth.
+	 * @param True
+	 */
+	public void motorTurnHalfTeeth(boolean left) {
+		if(left) {
 			motor.rotate(turndegrees / 2, false);
 		} else {
 			motor.rotate(-turndegrees / 2, false);

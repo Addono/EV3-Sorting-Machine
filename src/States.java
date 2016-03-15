@@ -162,7 +162,6 @@ enum States implements State {
 	AcceptDisk2 {
 		@Override
 		public State next(Input i, Output o) {
-			// Display count
 			if (i.counterGreaterThanZero()) {
 				return ExpectsDisk;
 			} else {
@@ -225,6 +224,7 @@ enum States implements State {
 				return AcceptDisk2;
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
 				o.stuckInTube();
+				
 				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
