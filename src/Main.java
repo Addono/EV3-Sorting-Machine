@@ -10,21 +10,19 @@ public class Main {
 		Input input = new Input(sv);    // Create the input object.
 		Output output = new Output(sv); // Create the output object.
 		
-		for(;!(s instanceof FinalState) && !Button.ESCAPE.isDown();) {
+		while(!Button.ESCAPE.isDown()) {
 			// Update the state.
 			s = s.next(input, output);
 			
 			// Update the message drawn on the screen.
 			output.setMessage(s);
 			
-			// Step for step mode.
-			// Button.UP.waitForPress();
-			
-			// Draw the current state on the screen.
-			LCD.drawString("Current State: ", 0, 6);
-			LCD.drawString((States)s + "", 0 , 7);
+			// Implement the ABORT button.
+			if(Button.UP.isDown()) {
+				s = States.Rest;
+			}
 			
 			Delay.msDelay(100);
-		};
+		}
 	}
 }
