@@ -213,18 +213,15 @@ enum States implements State {
 		public State next(Input i, Output o) {
 			i.updateColor(); // Sample the sensor for new color data.
 			
-			//display nr. of disks, plus nr. of black and white
 			if (i.colorSensorWhite() && !i.colorSensorBlack() && !i.colorSensorGrey()) {
 				o.decreaseCounter();
 				o.motorSortWhite();
 				o.increaseWhiteCounter();
-				//wait until done
 				return AcceptDisk2;
 			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorGrey()) {
 				o.decreaseCounter();
 				o.motorSortBlack();
 				o.increaseBlackCounter();
-				//wait until done
 				return AcceptDisk2;
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorGrey()) {
 				o.stuckInTube();
@@ -232,8 +229,9 @@ enum States implements State {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
 				}
-			} else {//all three are false
+			} else {// If the color sensor is indecisive.
 				o.anotherColor();
+				
 				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
@@ -241,13 +239,6 @@ enum States implements State {
 			}
 			
 			return ExpectsDisk;
-		}
-	},
-	
-	Exit {
-		@Override 
-		public State next(Input i, Output o) {
-			return Exit;
 		}
 	}
 }
