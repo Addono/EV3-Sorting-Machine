@@ -20,9 +20,8 @@ public class Main {
 			// Implement the ABORT button.
 			if(Button.UP.isDown()) {
 				s = States.Rest;
+				output.aborted();
 			}
-			
-			Delay.msDelay(100);
 		}
 	}
 }
