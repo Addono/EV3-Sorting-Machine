@@ -1,6 +1,8 @@
 import lejos.internal.ev3.EV3LED;
 import lejos.hardware.lcd.LCD;
+import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.motor.Motor;
+import lejos.hardware.BrickFinder;
 import lejos.hardware.LED;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.NXTRegulatedMotor;
@@ -18,6 +20,7 @@ public class Output implements EV3SensorConstants {
 	private int smallStepSize = 1; // Define the size of a small step as an angle in degrees.
 	
 	private LED led; // Create led object to control it
+	private GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
 	
 	private int lastLEDSpeed = -1;
 	private String lastLEDColor = null;
@@ -32,7 +35,9 @@ public class Output implements EV3SensorConstants {
 	public Output(StateVariables sv) {
 		this.sv = sv;
 		
-		// 
+		// Disable the auto refresh of the screen, we will take care of it ourself.
+		LCD.setAutoRefresh(false);
+		
 		initializeMotor();
 	}
 
@@ -125,7 +130,7 @@ public class Output implements EV3SensorConstants {
 	}
 
 	public void waitForInput() {
-		currentMessage = "No disk detected, inserted disks will be counter, enter to exit.";
+		currentMessage = "No disk detected, inserted disks will now be counted, press enter to cancel.";
 		setLEDState("userInput");
 	}
 
@@ -157,6 +162,11 @@ public class Output implements EV3SensorConstants {
 	public void notBreak() {
 		currentMessage = "No break. Sorting..";
 		setLEDState("busy");
+	}
+	
+	public void aborted() {
+		currentMessage = "Machine aborted, to start sorting: press yes if the tube is empty, else no.";
+		setLEDState("error");
 	}
 
 	public void start() {
@@ -229,17 +239,26 @@ public class Output implements EV3SensorConstants {
 	 * Draw the currently active message on the screen.
 	 */
 	public void setMessage(State s) {
-		LCD.clearDisplay();							// Clear the screen prior drawing.
-		textSegment(currentMessage, 0, 0, 19, 3);  	// Draw the message.
+		LCD.clear();								// Clear the screen prior drawing.
+		textSegment(currentMessage, 0, 0, 19, 5);  	// Draw the message.
 
+		int barWidth = 86;
+		int barHeight = 10;
+		int x = 9 * 10;
+		int y = 16 * 5 + 2;
 		
-		LCD.drawString("Disks : " + sv.getDiskCount(), 0, 3);
-		LCD.drawString("White : " + sv.getWhiteDiskCount(), 0, 4);
-		LCD.drawString("Black : " + sv.getBlackDiskCount(), 0, 5);
+		g.drawRect(x, y, barWidth, barHeight);
+		g.fillRect(x, y, sv.getDiskCount() * barWidth / 12, barHeight); // One letter has size of +- 9 x 16 pixels
+		
+		// Draw the disk counters on the screen.
+		LCD.drawString("Disks:" + sv.getDiskCount(), 0, 5);
+		LCD.drawString("#Sorted  W:" + sv.getWhiteDiskCount(), 0, 6);
+		LCD.drawString("B:" + sv.getBlackDiskCount(), 13, 6);
 		
 		// Draw the current state on the screen.
-		LCD.drawString("Current State: ", 0, 6);
-		LCD.drawString((States)s + "", 0 , 7);
+		LCD.drawString("CS: " + (States)s, 0, 7);
+		
+		LCD.refresh(); // Refresh the screen to update the content on it.
 	}
 
 	public void setLEDState(String state) {
@@ -278,7 +297,7 @@ public class Output implements EV3SensorConstants {
 	// 				HANDLE MOTOR CONTROL
 
 	/**
-	 * When the color sensor detects a black disk, turn one right.
+	 * When the color sensor detects a black disk, turn one teeth right.
 	 */
 	
 	public void motorSortBlack() {
@@ -286,12 +305,16 @@ public class Output implements EV3SensorConstants {
 	}
 
 	/**
-	 * When the color sensor detects a white disk, turn one left.
+	 * When the color sensor detects a white disk, turn one teeth left.
 	 */
 	public void motorSortWhite() {
 		motor.rotate(-turndegrees, false);
 	}
 	
+	/**
+	 * Let the motor turn a small step.
+	 * @param True if it should turn left, false if it should turn right.
+	 */
 	public void motorTurnSmallStep(boolean left) {
 		if(left) {
 			motor.rotate(smallStepSize, true);
@@ -302,7 +325,7 @@ public class Output implements EV3SensorConstants {
 
 	/**
 	 * Let the motor run for half a teeth.
-	 * @param True
+	 * @param True if it should turn left, false if it should turn right.
 	 */
 	public void motorTurnHalfTeeth(boolean left) {
 		if(left) {
