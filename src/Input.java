@@ -17,14 +17,13 @@ public class Input implements EV3SensorConstants {
 	private float[] RGB = new float[3];
 	private float RGBAvg, redPer, bluePer, greenPer;
 	
-	//
+	// Define all variables needed for port selection.
 	private Port[] ports = new Port[4];
-	
 	ConfigurationPort[] configPorts = new ConfigurationPort[4];
 	int colorPort, touchPort;
 	EV3TouchSensor touchSensor;
 	
-	// Initialize variables for the touch sensor and buttons. 
+	// Initialize variables for the touch sensor.
 	private float[] isTouched = new float[1];
 	
 	public Input(StateVariables sv) {
@@ -36,7 +35,6 @@ public class Input implements EV3SensorConstants {
 		ports[2] = SensorPort.S3;
 		ports[3] = SensorPort.S4;
 
-		
 		//initializeSensors();
 	}
 	
@@ -45,7 +43,7 @@ public class Input implements EV3SensorConstants {
 	/**
 	 * Initialize sensors.
 	 */
-	void initializeSensors() {
+	private void initializeSensors() {
 		// Open all configuration ports.
 		for(int i = 0; i < ports.length; i++) {
 			configPorts[i] = ports[i].open(ConfigurationPort.class);
