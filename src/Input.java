@@ -155,7 +155,7 @@ public class Input implements EV3SensorConstants {
 	}
 	
 	public boolean colorSensorTeeth() {
-		return redPer > 40;
+		return redPer > 45;
 	}
 	
 	/**
