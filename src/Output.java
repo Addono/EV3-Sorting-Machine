@@ -1,4 +1,3 @@
-import lejos.utility.Delay;
 import lejos.internal.ev3.EV3LED;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
@@ -15,10 +14,10 @@ public class Output implements EV3SensorConstants {
 	private String currentMessage = ""; // Contains the message which currently should be drawn.
 	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
 	
-	LED led; //create led object to control it
+	LED led; // Create led object to control it
 	
-	private int lastLEDSpeed;
-	private String lastLEDColor;
+	private int lastLEDSpeed = -1;
+	private String lastLEDColor = null;
 
 	// Import motor related things.
 	private Port[] ports = new Port[4];
@@ -49,17 +48,16 @@ public class Output implements EV3SensorConstants {
 		}
 		
 		// Wait until a motor is detected.
-		updateSensors();
-		while(motorPort == -1) {
+		do {
 			updateSensors();
-		}
+		} while(motorPort == -1);
 		
 		// Close all ports, to allow to open motor ports on it.
 		for(int i = 0; i < configPorts.length; i++) {
 			configPorts[i].close();
 		}
 		
-		// Open the appropriate motor port.
+		// Select - and therefore open - the appropriate motor port.
 		switch(motorPort) {
 		case 0:
 			motor = Motor.A;
@@ -77,6 +75,9 @@ public class Output implements EV3SensorConstants {
 			motor = Motor.D;
 			break;
 		}
+		
+		// Maximize the motor speed for faster sorting.
+		motor.setSpeed(motor.getMaxSpeed());
 	}
 	
 	/**
@@ -115,54 +116,72 @@ public class Output implements EV3SensorConstants {
 
 	public void tubeEmpty() {
 		currentMessage = "Tube is empty! Press any button";
+		setLEDState("userInput");
 	}
 
 	public void waitForInput() {
-		currentMessage = "The tube is empty, waiting for input";
+		currentMessage = "No disk(s) detected anymore, press enter to resume.";
+		setLEDState("userInput");
 	}
 
 	public void askIfEmpty() {
 		currentMessage = "Is the tube empty? Yes or No?";
+		setLEDState("userInput");
 	}
 
 	public void tubeNotEmpty() {
 		currentMessage = "Tube not empty. Sorting";
+		setLEDState("busy");
 	}
 
 	public void askUser() {
 		currentMessage = "Unexpected disk detected, should we stop?";
+		setLEDState("error");
 	}
 
 	public void breakMachine() {
 		currentMessage = "Break. Resting..";
+		setLEDState("busy");
 	}
 
 	public void notBreak() {
 		currentMessage = "No break. Sorting..";
+		setLEDState("busy");
 	}
 
 	public void start() {
 		currentMessage = "Starting..";
+		setLEDState("busy");
 	}
 
 	public void noDisk() {
 		currentMessage = "No disk detected";
+		setLEDState("error");
 	}
 	
 	public void tooEarly() {
 		currentMessage = "Disk inserted too early, press enter to flush.";
+		setLEDState("error");
 	}
 
 	public void anotherColor() {
 		currentMessage = "Different color, wrong type of disk?";
+		setLEDState("error");
 	}
 
 	public void stuckInTube() {
 		currentMessage = "Earlier done than expected, disk stuck?";
+		setLEDState("error");
 	}
 
 	public void enterToSort() {
-		currentMessage = "Press Enter to start sorting";
+		currentMessage = "Press Enter to start sorting.";
+		setLEDState("userInput");
+	}
+	
+	public void isCalibrating() {
+		currentMessage = "The machine is calibrating now.";
+		setLEDState("busy");
 	}
 	
 	/*
@@ -196,7 +215,7 @@ public class Output implements EV3SensorConstants {
 		LCD.drawString(currentLine, x, line); // Draw the last line.
 	}
 
-	/*
+	/**
 	 * Draw the currently active message on the screen.
 	 */
 	public void setMessage(State s) {
@@ -213,7 +232,21 @@ public class Output implements EV3SensorConstants {
 		LCD.drawString((States)s + "", 0 , 7);
 	}
 
-	public void setLed(String color, int speed) {// Requires a color and a speed 0, 1 or 2
+	public void setLEDState(String state) {
+		switch(state) {
+		case "error":
+			setLED("red", 2);
+			break;
+		case "userInput":
+			setLED("orange", 1);
+			break;
+		case "busy":
+			setLED("green", 0);
+			break;
+		}
+	}
+	
+	public void setLED(String color, int speed) {// Requires a color and a speed 0, 1 or 2
 		led = LocalEV3.ev3.getLED();
 		speed *= 3; // Is needed for the right number
 		
@@ -241,7 +274,7 @@ public class Output implements EV3SensorConstants {
 	public void motorSortBlack() {
 		motor.rotate(turndegrees, false);
 
-		Delay.msDelay(300);
+		// Delay.msDelay(100);
 	}
 
 	/**
@@ -250,7 +283,7 @@ public class Output implements EV3SensorConstants {
 	public void motorSortWhite() {
 		motor.rotate(-turndegrees, false);
 
-		Delay.msDelay(300);
+		// Delay.msDelay(300);
 	}
 	
 	public void motorTurnSmallStep(boolean forward) {
