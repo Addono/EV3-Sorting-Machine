@@ -227,14 +227,14 @@ enum States implements State {
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorIsNoDisk()) {
 				o.stuckInTube();
 				
-				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {
+				if (i.buttonSSDown()) {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
 				}
 			} else {// If the color sensor is indecisive.
 				o.anotherColor();
 				
-				if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {
+				if (i.buttonSSDown()) {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
 				}
