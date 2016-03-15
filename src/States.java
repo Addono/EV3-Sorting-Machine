@@ -47,7 +47,7 @@ enum States implements State {
 			
 			if(i.colorSensorTeeth()) {
 				o.setSecondCaliPoint();
-				o.motorMoveInbetweenCaliPoints();
+				o.motorMoveInBetweenCaliPoints();
 				o.askIfEmpty(); // Ask the user if the tube is empty.
 				return Rest;
 			} else {

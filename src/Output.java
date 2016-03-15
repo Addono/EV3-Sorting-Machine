@@ -15,7 +15,7 @@ public class Output implements EV3SensorConstants {
 	private String currentMessage = ""; // Contains the message which currently should be drawn, initially empty.
 	
 	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
-	private float smallStepSize = 1; // Define the size of a small step as an angle in degrees.
+	private int smallStepSize = 1; // Define the size of a small step as an angle in degrees.
 	
 	private LED led; // Create led object to control it
 	
@@ -188,13 +188,13 @@ public class Output implements EV3SensorConstants {
 		setLEDState("busy");
 	}
 	
-	/*
+	/**
 	 * Draws a string in a specific area.
-	 * @input	The string to be drawn.
-	 * @input	x start coordinate of the segment.
-	 * @input	y start coordinate of the segment.
-	 * @input	Width of the segment.
-	 * @input	Height of the segment.
+	 * @param	The string to be drawn.
+	 * @param	x start coordinate of the segment.
+	 * @param	y start coordinate of the segment.
+	 * @param	Width of the segment.
+	 * @param	Height of the segment.
 	 */
 	private void textSegment(String input, int x, int y, int width, int height) {
 		String[] words = input.split(" ");
@@ -306,7 +306,10 @@ public class Output implements EV3SensorConstants {
 		}
 	}
 	
-	public void motorMoveInbetweenCaliPoints() {
+	/**
+	 * Moves the wheel in between the two calibrated points.
+	 */
+	public void motorMoveInBetweenCaliPoints() {
 		int targetAngle = (int) ((sv.getFirstCaliPoint() + sv.getSecondCaliPoint()) / 2f);
 		motor.rotateTo(targetAngle, false);
 	}
