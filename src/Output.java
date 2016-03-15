@@ -32,6 +32,7 @@ public class Output implements EV3SensorConstants {
 	public Output(StateVariables sv) {
 		this.sv = sv;
 		
+		// 
 		initializeMotor();
 	}
 
@@ -124,7 +125,7 @@ public class Output implements EV3SensorConstants {
 	}
 
 	public void waitForInput() {
-		currentMessage = "No disk(s) detected anymore, press enter to resume.";
+		currentMessage = "No disk detected, inserted disks will be counter, enter to exit.";
 		setLEDState("userInput");
 	}
 
@@ -135,6 +136,11 @@ public class Output implements EV3SensorConstants {
 
 	public void tubeNotEmpty() {
 		currentMessage = "Tube not empty. Sorting";
+		setLEDState("busy");
+	}
+	
+	public void sorting() {
+		currentMessage = "Sorting.";
 		setLEDState("busy");
 	}
 
@@ -169,7 +175,7 @@ public class Output implements EV3SensorConstants {
 	}
 
 	public void anotherColor() {
-		currentMessage = "Different color, wrong type of disk?";
+		currentMessage = "Color not detected, press enter to flush as white disk?";
 		setLEDState("error");
 	}
 
@@ -184,7 +190,7 @@ public class Output implements EV3SensorConstants {
 	}
 	
 	public void isCalibrating() {
-		currentMessage = "The machine is calibrating now.";
+		currentMessage = "Calibration in process.";
 		setLEDState("busy");
 	}
 	

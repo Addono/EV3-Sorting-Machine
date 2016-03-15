@@ -108,18 +108,20 @@ enum States implements State {
 			if (i.colorSensorIsNoDisk()) {
 				return CheckDiskPresent;
 			} else if (i.colorSensorBlack()) {
+				o.sorting();
 				o.motorSortBlack();
 				return SortDisksNoCounting;
 			} else if (i.colorSensorWhite()) {
+				o.sorting();
 				o.motorSortWhite();
 				return SortDisksNoCounting;
 			} else {
 				o.anotherColor();
-				if (i.buttonNoDown() || i.buttonYesDown() || i.buttonSSDown()) {
+				if (i.buttonSSDown()) {
+					o.sorting();
 					o.motorSortWhite();
 					return SortDisksNoCounting;
 				}
-				
 			}
 			
 			return SortDisksNoCounting;
