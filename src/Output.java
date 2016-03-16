@@ -242,9 +242,9 @@ public class Output implements EV3SensorConstants {
 		LCD.clear();								// Clear the screen prior drawing.
 		textSegment(currentMessage, 0, 0, 19, 5);  	// Draw the message.
 
-		int barWidth = 96;
+		int barWidth = 92;
 		int barHeight = 10;
-		int x = 80;
+		int x = 84;
 		int y = 82;
 		
 		g.drawRect(x, y, barWidth, barHeight);
