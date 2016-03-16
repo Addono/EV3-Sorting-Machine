@@ -135,12 +135,12 @@ public class Output implements EV3SensorConstants {
 	}
 
 	public void askIfEmpty() {
-		currentMessage = "Prior to sorting check if the tube is empty, press Yes or No Enter to calibrate";
+		currentMessage = "Prior to sorting check if the tube is empty, press Yes or No. Enter: Calibrate";
 		setLEDState("userInput");
 	}
 
 	public void tubeNotEmpty() {
-		currentMessage = "Tube not empty. Sorting disks now.";
+		currentMessage = "Tube is not empty. Sorting disks now.";
 		setLEDState("busy");
 	}
 	
@@ -149,8 +149,8 @@ public class Output implements EV3SensorConstants {
 		setLEDState("busy");
 	}
 
-	public void askUser() {
-		currentMessage = "Unexpected disk detected, should we stop?";
+	public void askUnexpectedDisk() {
+		currentMessage = "Unexpected disk detected, press Yes to sort it, No to reset and go back to the main menu.";
 		setLEDState("error");
 	}
 
