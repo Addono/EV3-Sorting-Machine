@@ -151,7 +151,7 @@ public class Input implements EV3SensorConstants {
 	 * @return 
 	 */
 	public boolean colorSensorTeeth() {
-		return RGB[0] > 0.04f;
+		return RGB[0] > 0.04f && redPercentage > 30;
 	}
 
 	/**
@@ -217,5 +217,9 @@ public class Input implements EV3SensorConstants {
 	 */
 	public boolean counterGreaterThanZero() {
 		return sv.counterGreaterThanZero();
+	}
+	
+	public boolean getMotorStalled() {
+		return sv.getMotorStalled();
 	}
 }

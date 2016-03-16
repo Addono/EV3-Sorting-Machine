@@ -23,6 +23,11 @@ enum States implements State {
 			
 			if(i.colorSensorTeeth()) {
 				o.motorTurnHalfTeeth(true);
+				
+				if(i.getMotorStalled()) {
+					o.messageMotorStalled();
+					return MotorStalled;
+				}
 			}
 			
 			return findFirstPoint;
@@ -42,10 +47,22 @@ enum States implements State {
 			if(i.colorSensorTeeth()) { // Check if we found a teeth.
 				o.setFirstCaliPoint(); // If so, set this as the first calibration point.
 				o.motorTurnHalfTeeth(true); // And turn in the reversed direction past the current teeth.
-				return findSecondPoint;
+				
+				if(i.getMotorStalled()) {
+					o.messageMotorStalled();
+					return MotorStalled;
+				} else {
+					return findSecondPoint;
+				}
 			} else {
 				o.motorTurnSmallStep(false); // If not, keep turning until a teeth is found.
-				return findFirstPoint;
+				
+				if(i.getMotorStalled()) {
+					o.messageMotorStalled();
+					return MotorStalled;
+				} else {
+					return findFirstPoint;
+				}
 			}
 		}
 	},
@@ -63,6 +80,12 @@ enum States implements State {
 			if(i.colorSensorTeeth()) { // Check if we found the second teeth.
 				o.setSecondCaliPoint(); // If so, store this as the second calibration point.
 				o.motorMoveInBetweenCaliPoints(); // Turn to the calibrated point.
+				
+				if(i.getMotorStalled()) {
+					o.messageMotorStalled();
+					return MotorStalled;
+				}
+				
 				o.askIfEmpty(); // Ask the user if the tube is empty.
 				return Rest;
 			} else {
@@ -154,7 +177,13 @@ enum States implements State {
 			} else if (i.colorSensorBlack()) {
 				o.sorting();
 				o.motorSortBlack();
-				return SortDisksNoCounting;
+				
+				if(i.getMotorStalled()) {
+					o.messageMotorStalled();
+					return MotorStalled;
+				} else {
+					return SortDisksNoCounting;
+				}
 			} else if (i.colorSensorWhite()) {
 				o.sorting();
 				o.motorSortWhite();
@@ -169,6 +198,18 @@ enum States implements State {
 					return SortDisksNoCounting;
 				}
 			}
+		}
+	},
+	
+	MotorStalled {
+		@Override
+		public State next(Input i, Output o) {
+			if(i.buttonEnterDown()) {
+				o.setCounterToZero();
+				return Initial;
+			}
+			
+			return MotorStalled;
 		}
 	},
 	
@@ -267,12 +308,24 @@ enum States implements State {
 				o.decreaseCounter();
 				o.motorSortWhite();
 				o.increaseWhiteCounter();
-				return AcceptDisk2;
+				
+				if(i.getMotorStalled()) {
+					o.messageMotorStalled();
+					return MotorStalled;
+				} else {
+					return AcceptDisk2;
+				}
 			} else if (i.colorSensorBlack() && !i.colorSensorWhite() && !i.colorSensorIsNoDisk()) {
 				o.decreaseCounter();
 				o.motorSortBlack();
 				o.increaseBlackCounter();
-				return AcceptDisk2;
+				
+				if(i.getMotorStalled()) {
+					o.messageMotorStalled();
+					return MotorStalled;
+				} else {
+					return AcceptDisk2;
+				}
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorIsNoDisk()) {
 				o.stuckInTube();
 				

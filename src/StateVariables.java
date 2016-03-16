@@ -7,6 +7,8 @@ public class StateVariables {
 	private float firstCaliPoint;
 	private float secondCaliPoint;
 	
+	private boolean motorStalled = false;
+	
 	public StateVariables() {}
 	
 	// 				INPUT
@@ -21,6 +23,10 @@ public class StateVariables {
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean getMotorStalled() {
+		return motorStalled;
 	}
 	
 	// 				OUTPUT
@@ -122,6 +128,12 @@ public class StateVariables {
 	 */
 	public int getDiskCount() {
 		return diskCounter;
+	}
+	
+	//				MOTOR
+	
+	public void motorStalled(boolean isStalled) {
+		motorStalled = isStalled;
 	}
 }	
 	

@@ -87,6 +87,7 @@ public class Output implements EV3SensorConstants {
 		
 		// Maximize the motor speed for faster sorting.
 		motor.setSpeed(motor.getMaxSpeed());
+		motor.setStallThreshold(2, 500); // Defines stalled as pushed out of position for 2 degrees and 500 ms. 
 	}
 	
 	/**
@@ -130,7 +131,7 @@ public class Output implements EV3SensorConstants {
 	}
 
 	public void waitForInput() {
-		currentMessage = "No disk detected, inserted disks will now be counted. Press Enter to cancel.";
+		currentMessage = "No disks counted, inserted disks will now be counted. Press Enter to cancel.";
 		setLEDState("userInput");
 	}
 
@@ -202,6 +203,14 @@ public class Output implements EV3SensorConstants {
 	public void isCalibrating() {
 		currentMessage = "Calibration in process.";
 		setLEDState("busy");
+	}
+	
+	public void messageMotorStalled() {
+		currentMessage = "Motor was stalled. Solve the problem and press Enter to restart, or Abort to exit the program.";
+		setLEDState("error");
+		
+		// Reset the motor stalled variable.
+		sv.motorStalled(false);
 	}
 	
 	/**
@@ -301,18 +310,18 @@ public class Output implements EV3SensorConstants {
 	 */
 	
 	public void motorSortBlack() {
-		motor.rotate(turndegrees, false);
+		turnMotor(turndegrees);
 	}
 
 	/**
 	 * When the color sensor detects a white disk, turn one teeth left.
 	 */
 	public void motorSortWhite() {
-		motor.rotate(-turndegrees, false);
+		turnMotor(-turndegrees);
 	}
 	
 	/**
-	 * Let the motor turn a small step.
+	 * Let the motor turn a small step, it will not wait for the motor to finish.
 	 * @param True if it should turn left, false if it should turn right.
 	 */
 	public void motorTurnSmallStep(boolean left) {
@@ -329,9 +338,9 @@ public class Output implements EV3SensorConstants {
 	 */
 	public void motorTurnHalfTeeth(boolean left) {
 		if(left) {
-			motor.rotate(turndegrees / 2, false);
+			turnMotor(turndegrees / 2);
 		} else {
-			motor.rotate(-turndegrees / 2, false);
+			turnMotor(-turndegrees / 2);
 		}
 	}
 	
@@ -343,6 +352,18 @@ public class Output implements EV3SensorConstants {
 		motor.rotateTo(targetAngle, false);
 	}
 	
+	
+	private void turnMotor(int angle) {
+		motor.rotate(angle, true); // Turn the motor, return immediately.
+		
+		while(!motor.isStalled() && motor.isMoving()) {}
+		
+		if(motor.isStalled()) {
+			messageMotorStalled();
+			sv.motorStalled(true);
+		}
+		
+	}
 	// 				HANDLE STATE VARIABLES
 
 	public void decreaseCounter() {
