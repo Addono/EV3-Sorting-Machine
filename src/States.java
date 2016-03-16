@@ -67,6 +67,9 @@ enum States implements State {
 				return CheckDiskPresent;
 			} else if (i.touchDown()) {
 				return InsertedEarly;
+			} else if (i.buttonSSDown()) {
+				o.isCalibrating();
+				return moveBetweenTeeth;
 			}
 			
 			return Rest;

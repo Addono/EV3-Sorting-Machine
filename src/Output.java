@@ -125,22 +125,22 @@ public class Output implements EV3SensorConstants {
 	// 				HANDLE MESSAGE CONTROL
 
 	public void tubeEmpty() {
-		currentMessage = "Tube is empty! Press any button";
+		currentMessage = "Tube should be empty! Press Enter to resume.";
 		setLEDState("userInput");
 	}
 
 	public void waitForInput() {
-		currentMessage = "No disk detected, inserted disks will now be counted, press enter to cancel.";
+		currentMessage = "No disk detected, inserted disks will now be counted. Press Enter to cancel.";
 		setLEDState("userInput");
 	}
 
 	public void askIfEmpty() {
-		currentMessage = "Is the tube empty? Yes or No?";
+		currentMessage = "Prior to sorting check if the tube is empty, press Yes or No Enter to calibrate";
 		setLEDState("userInput");
 	}
 
 	public void tubeNotEmpty() {
-		currentMessage = "Tube not empty. Sorting";
+		currentMessage = "Tube not empty. Sorting disks now.";
 		setLEDState("busy");
 	}
 	
@@ -165,7 +165,7 @@ public class Output implements EV3SensorConstants {
 	}
 	
 	public void aborted() {
-		currentMessage = "Machine aborted, to start sorting: press yes if the tube is empty, else no.";
+		currentMessage = "Machine stopped, to start sorting: press Yes if the tube is empty, else press No.";
 		setLEDState("error");
 	}
 
@@ -190,7 +190,7 @@ public class Output implements EV3SensorConstants {
 	}
 
 	public void stuckInTube() {
-		currentMessage = "Earlier done than expected, disk stuck?";
+		currentMessage = "Earlier done than expected, disk stuck? Press enter to dismiss.";
 		setLEDState("error");
 	}
 
@@ -219,7 +219,7 @@ public class Output implements EV3SensorConstants {
 		String currentLine = "";
 		
 		// Loop through all words, until all words are drawn or the screen is segment if full.
-		for(int i = 0; i < words.length && line < height; i++) {
+		for(int i = 0; i < words.length && line + 1 < height; i++) {
 			if(lineLength + words[i].length() >= width) { // Check if the next word first on the screen, if it doesn't then draw the previous line and resume on the next one.
 				LCD.drawString(currentLine, x, line);
 				
@@ -242,17 +242,17 @@ public class Output implements EV3SensorConstants {
 		LCD.clear();								// Clear the screen prior drawing.
 		textSegment(currentMessage, 0, 0, 19, 5);  	// Draw the message.
 
-		int barWidth = 86;
+		int barWidth = 96;
 		int barHeight = 10;
-		int x = 9 * 10;
-		int y = 16 * 5 + 2;
+		int x = 80;
+		int y = 82;
 		
 		g.drawRect(x, y, barWidth, barHeight);
 		g.fillRect(x, y, sv.getDiskCount() * barWidth / 12, barHeight); // One letter has size of +- 9 x 16 pixels
 		
 		// Draw the disk counters on the screen.
 		LCD.drawString("Disks:" + sv.getDiskCount(), 0, 5);
-		LCD.drawString("#Sorted  W:" + sv.getWhiteDiskCount(), 0, 6);
+		LCD.drawString("#Sorted W:" + sv.getWhiteDiskCount(), 0, 6);
 		LCD.drawString("B:" + sv.getBlackDiskCount(), 13, 6);
 		
 		// Draw the current state on the screen.
