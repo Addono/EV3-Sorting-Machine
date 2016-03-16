@@ -25,6 +25,7 @@ public class Input implements EV3SensorConstants {
 
 	// Initialize variables for the touch sensor and buttons.
 	private float[] isTouched = new float[1];
+	private boolean enterWasDown = false;
 
 	public Input(StateVariables sv) {
 		this.sv = sv;
@@ -179,8 +180,17 @@ public class Input implements EV3SensorConstants {
 	 * Returns if the start/stop button is pressed.
 	 * @return True if the start/stop button is pressed, false if it isn't.
 	 */
-	public boolean buttonSSDown() {
+	public boolean buttonEnterDown() {
 		return Button.ENTER.isDown();
+	}
+	
+	public boolean buttonEnterPressed() {
+		boolean isDown = buttonEnterDown();
+		boolean isPressed = isDown && !enterWasDown;
+		
+		enterWasDown = isDown;
+		
+		return isPressed;
 	}
 
 	/**
