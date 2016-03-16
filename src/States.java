@@ -96,7 +96,7 @@ enum States implements State {
 			} else if (i.touchDown()) {
 				o.tooEarly();
 				return InsertedEarly;
-			} else if (i.buttonSSDown()) {
+			} else if (i.buttonEnterPressed()) {
 				o.isCalibrating();
 				return moveBetweenTeeth;
 			}
@@ -112,7 +112,7 @@ enum States implements State {
 	InsertedEarly {
 		@Override
 		public State next(Input i, Output o) {
-			if (i.buttonSSDown()) {
+			if (i.buttonEnterPressed()) {
 				return CheckDiskPresent;
 			}
 			
@@ -141,6 +141,9 @@ enum States implements State {
 		}
 	},
 	
+	/*
+	 * Sort the disks without using the counter.
+	 */
 	SortDisksNoCounting {
 		@Override
 		public State next(Input i, Output o) {
@@ -157,7 +160,7 @@ enum States implements State {
 				o.motorSortWhite();
 				return SortDisksNoCounting;
 			} else {
-				if (i.buttonSSDown()) {
+				if (i.buttonEnterPressed()) {
 					o.sorting();
 					o.motorSortWhite();
 					return SortDisksNoCounting;
@@ -169,6 +172,10 @@ enum States implements State {
 		}
 	},
 	
+	/*
+	 * Waits for the user to insert a disk, or to start the
+	 * sorting procedure.
+	 */
 	Waiting {
 		@Override
 		public State next(Input i, Output o) {
@@ -183,7 +190,7 @@ enum States implements State {
 				return DiskAdd;
 			}
 			
-			if (i.buttonSSDown()) {
+			if (i.buttonEnterPressed()) {
 				return AcceptDisk2;
 			}
 			
@@ -219,12 +226,12 @@ enum States implements State {
 			i.updateColor(); // Sample the sensor for new color data.
 			
 			if ((i.colorSensorBlack() || i.colorSensorWhite()) && !i.colorSensorIsNoDisk()) {
-				o.askUser(); // Should the machine stop
+				o.askUnexpectedDisk(); // Ask the user what to do with the unexpected disk.
 				return AskUser;
 			} else {
 				o.tubeEmpty(); // Press any button to continue
 				
-				if (i.buttonYesDown() || i.buttonNoDown() || i.buttonSSDown()) {
+				if (i.buttonYesDown() || i.buttonNoDown() || i.buttonEnterPressed()) {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
 				} 
@@ -237,11 +244,12 @@ enum States implements State {
 	AskUser {
 		@Override
 		public State next(Input i, Output o) {
-			o.askUser();
-			if (i.buttonYesDown()) {
+			if (i.buttonNoDown()) {
 				o.askIfEmpty(); // Ask the user if the tube is empty.
+				o.setCounterToZero();
 				return Rest;
-			} else if (i.buttonNoDown()) {
+			} else if (i.buttonYesDown()) {
+				o.increaseCounter(); // Apparently one - at least - more disk was present than expected, take this into account. 
 				return ExpectsDisk;
 			} else {
 				return AskUser;
@@ -268,14 +276,14 @@ enum States implements State {
 			} else if (!i.colorSensorBlack() && !i.colorSensorWhite() && i.colorSensorIsNoDisk()) {
 				o.stuckInTube();
 				
-				if (i.buttonSSDown()) {
+				if (i.buttonEnterPressed()) {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
 				}
 			} else {// If the color sensor is indecisive.
 				o.anotherColor();
 				
-				if (i.buttonSSDown()) {
+				if (i.buttonEnterPressed()) {
 					o.askIfEmpty(); // Ask the user if the tube is empty.
 					return Rest;
 				}
