@@ -17,7 +17,7 @@ public class Main {
 			// Update the message drawn on the screen.
 			output.setMessage(s);
 			
-			// Implement the ABORT button.
+			// Implement the STOP button.
 			if(Button.UP.isDown()) {
 				s = States.Rest;
 				output.aborted();
