@@ -6,11 +6,16 @@ enum States implements State {
 	Initial {
 		@Override
 		public State next(Input i, Output o) {
-			o.isCalibrating();
-			return moveBetweenTeeth;
+			o.isCalibrating(); // Show a message that the machine is now calibrating.
+			return moveBetweenTeeth; // Start the calibration at boot.
 		}
 	},
 	
+	/*
+	 * If there is a teeth in front of the sensor, then turn the
+	 * wheel for half a teeth to prevent the teeth to be in front
+	 * of the sensor.
+	 */
 	moveBetweenTeeth {
 		@Override
 		public State next(Input i, Output o) {
@@ -24,39 +29,62 @@ enum States implements State {
 		}
 	},
 	
+	/*
+	 *  Turns the wheel until a teeth is found, then stores the wheel
+	 *  and starts the search for the position of the second teeth.
+	 */
+	
 	findFirstPoint {
 		@Override
 		public State next(Input i, Output o) {
-			i.updateColor();
+			i.updateColor(); // Update the color sensor data.
 			
-			if(i.colorSensorTeeth()) {
-				o.setFirstCaliPoint();
-				o.motorTurnHalfTeeth(true);
+			if(i.colorSensorTeeth()) { // Check if we found a teeth.
+				o.setFirstCaliPoint(); // If so, set this as the first calibration point.
+				o.motorTurnHalfTeeth(true); // And turn in the reversed direction past the current teeth.
 				return findSecondPoint;
 			} else {
-				o.motorTurnSmallStep(false);
+				o.motorTurnSmallStep(false); // If not, keep turning until a teeth is found.
 				return findFirstPoint;
 			}
 		}
 	},
 	
+	/*
+	 * Turns the wheel in search for the second teeth. It searches
+	 * in the opposite direction compared to the search for the first
+	 * teeth.
+	 */
 	findSecondPoint {
 		@Override
 		public State next(Input i, Output o) {
-			i.updateColor();
+			i.updateColor(); // Update the color sensor data.
 			
-			if(i.colorSensorTeeth()) {
-				o.setSecondCaliPoint();
-				o.motorMoveInBetweenCaliPoints();
+			if(i.colorSensorTeeth()) { // Check if we found the second teeth.
+				o.setSecondCaliPoint(); // If so, store this as the second calibration point.
+				o.motorMoveInBetweenCaliPoints(); // Turn to the calibrated point.
 				o.askIfEmpty(); // Ask the user if the tube is empty.
 				return Rest;
 			} else {
-				o.motorTurnSmallStep(true);
+				o.motorTurnSmallStep(true); // If not, keep turning until the second teeth is found.
 				return findSecondPoint;
 			}
 		}
 	},
 	
+	/*
+	 * State prior to sorting, allows the user to tell the machine if the
+	 * tube is:
+	 * 	- Contains disks (No button): Then the machine will sort disks as
+	 * long as they are in front of the sensor.
+	 *  - Empty (Yes button): The machine will start counting inserted disks.
+	 *  
+	 *  Or if the user wants to calibrate, pressing Enter restarts the
+	 *  calibration sequence.
+	 *  
+	 *  If a disk is inserted during this state, then we will handle this
+	 *  by showing an error message and sorting the tube without counting.
+	 */
 	Rest {
 		@Override
 		public State next(Input i, Output o) {
@@ -66,6 +94,7 @@ enum States implements State {
 			} else if(i.buttonNoDown()) {
 				return CheckDiskPresent;
 			} else if (i.touchDown()) {
+				o.tooEarly();
 				return InsertedEarly;
 			} else if (i.buttonSSDown()) {
 				o.isCalibrating();
@@ -76,17 +105,25 @@ enum States implements State {
 		}
 	},
 	
+	/*
+	 * If a disk was inserted early, then wait until the user presses
+	 * the Enter button and then start the sorting procedure.
+	 */
 	InsertedEarly {
 		@Override
 		public State next(Input i, Output o) {
-			o.tooEarly();
-			if (i.buttonNoDown() || i.buttonSSDown() || i.buttonYesDown()) {
+			if (i.buttonSSDown()) {
 				return CheckDiskPresent;
 			}
+			
 			return InsertedEarly;
 		}
 	},
 	
+	/*
+	 * Phase executed before sorting a disk, checks if as disk is present.
+	 * If not, then return to the waiting state, else sort the disk.
+	 */
 	CheckDiskPresent {
 		@Override
 		public State next(Input i, Output o) {
@@ -96,6 +133,7 @@ enum States implements State {
 				o.setCounterToZero();
 				return Waiting;
 			} else if (i.colorSensorBlack() || i.colorSensorWhite()) {
+				o.sorting();
 				return SortDisksNoCounting;
 			}
 			
@@ -119,15 +157,15 @@ enum States implements State {
 				o.motorSortWhite();
 				return SortDisksNoCounting;
 			} else {
-				o.anotherColor();
 				if (i.buttonSSDown()) {
 					o.sorting();
 					o.motorSortWhite();
 					return SortDisksNoCounting;
+				} else {
+					o.anotherColor();
+					return SortDisksNoCounting;
 				}
 			}
-			
-			return SortDisksNoCounting;
 		}
 	},
 	
