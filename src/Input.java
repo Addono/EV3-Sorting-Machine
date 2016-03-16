@@ -142,11 +142,15 @@ public class Input implements EV3SensorConstants {
 	 * @param True if no disk is in front of the sensor, else false.
 	 */
 	public boolean colorSensorIsNoDisk() {
-		return redPercentage > 25 && redPercentage <= 45;
+		return redPercentage > 25 && RGB[0] <= 0.04f;
 	}
 
+	/**
+	 * Returns if a teeth of the wheel is in front of the sensor.
+	 * @return 
+	 */
 	public boolean colorSensorTeeth() {
-		return redPercentage > 45;
+		return RGB[0] > 0.04f;
 	}
 
 	/**
