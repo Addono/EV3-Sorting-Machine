@@ -122,16 +122,6 @@ public class Input implements EV3SensorConstants {
 	}
 
 	/**
-	 * Returns if the red teeth of the sorting wheel are in front of the color
-	 * sensor.
-	 * @param True if the red part of the sorting wheel is in front of the
-	 *        sensor false if it isn't.
-	 */
-	public boolean colorSensorRed() {
-		return redPercentage > 30;
-	}
-
-	/**
 	 * Returns if a white disk is in front of the sorting wheel.
 	 * @param True if the disk in front of the sensor is white, else false.
 	 */
