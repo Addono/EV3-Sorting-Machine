@@ -1,0 +1,22 @@
+﻿Added Enter pushed button.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Mar 16 15:06:40 2016 +0100
+#
+# On branch master
+# Your branch is ahead of 'origin/master' by 1 commit.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   src/Input.java
+#
+# Changes not staged for commit:
+#	modified:   src/Output.java
+#	modified:   src/States.java
+#
+# Untracked files:
+#	ytfexcf0.vid.txt
+#
+
