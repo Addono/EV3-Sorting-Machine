@@ -79,11 +79,11 @@ public class Input implements EV3SensorConstants {
 		for (int i = 0; i < configPorts.length; i++) {
 			int portType = configPorts[i].getPortType();
 
-			// Find sensor currently is in this port.
+			// Find which sensor currently is in this port.
 			switch (portType) {
 			case CONN_INPUT_UART:
 				if (colorPort != -1) {
-					// Throw error: Two light sensors?
+					// Error: Two light sensors?
 					return false;
 				}
 
@@ -92,7 +92,7 @@ public class Input implements EV3SensorConstants {
 
 			case CONN_INPUT_DUMB:
 				if (touchPort != -1) {
-					// Throw error: Two touch sensors?
+					// Error: Two touch sensors?
 					return false;
 				}
 
@@ -100,8 +100,9 @@ public class Input implements EV3SensorConstants {
 				break;
 
 			case CONN_ERROR:
-				// Throw error: Unexpected sensor for this port, motor in sensor
-				// port or vice versa?
+				// Error: Unexpected sensor for this port, motor
+				// in sensor port or different EV3 sensor than color
+				// or touch?
 				return false;
 			}
 		}
@@ -124,7 +125,7 @@ public class Input implements EV3SensorConstants {
 
 	/**
 	 * Returns if a white disk is in front of the sorting wheel.
-	 * @param True if the disk in front of the sensor is white, else false.
+	 * @return True if the disk in front of the sensor is white, else false.
 	 */
 	public boolean colorSensorWhite() {
 		return RGBAvg >= .2;
@@ -132,7 +133,7 @@ public class Input implements EV3SensorConstants {
 
 	/**
 	 * Returns if a black disk is in front of the sorting wheel.
-	 * @param True if the disk in front of the sensor is black.
+	 * @return True if the disk in front of the sensor is black.
 	 */
 	public boolean colorSensorBlack() {
 		return .2 > RGBAvg && !colorSensorIsNoDisk();
@@ -140,7 +141,7 @@ public class Input implements EV3SensorConstants {
 
 	/**
 	 * Returns if no disk is in front of the sorting wheel.
-	 * @param True if no disk is in front of the sensor, else false.
+	 * @return True if no disk is in front of the sensor, else false.
 	 */
 	public boolean colorSensorIsNoDisk() {
 		return redPercentage > 25 && RGB[0] <= 0.04f;
@@ -148,7 +149,7 @@ public class Input implements EV3SensorConstants {
 
 	/**
 	 * Returns if a teeth of the wheel is in front of the sensor.
-	 * @return 
+	 * @return True if a wheel teeth is in front of the color sensor.
 	 */
 	public boolean colorSensorTeeth() {
 		return RGB[0] > 0.04f && redPercentage > 30;
@@ -156,7 +157,7 @@ public class Input implements EV3SensorConstants {
 
 	/**
 	 * Checks if the touch sensor is pressed.
-	 * @param True if the sensor is pressed, false if it isn't.
+	 * @return True if the sensor is pressed, false if it isn't.
 	 */
 	public boolean touchDown() {
 		// Get new values from the touch sensor.
@@ -213,12 +214,16 @@ public class Input implements EV3SensorConstants {
 
 	/**
 	 * Returns if the disk counter is zero.
-	 * @return True if the disk counter is greater than zero, elso false.
+	 * @return True if the disk counter is greater than zero, else false.
 	 */
 	public boolean counterGreaterThanZero() {
 		return sv.counterGreaterThanZero();
 	}
 	
+	/**
+	 * Retrieves the motor stalled state variable.
+	 * @return The value of the motor stalled state variable.
+	 */
 	public boolean getMotorStalled() {
 		return sv.getMotorStalled();
 	}
