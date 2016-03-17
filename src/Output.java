@@ -16,16 +16,19 @@ public class Output implements EV3SensorConstants {
 	
 	private String currentMessage = ""; // Contains the message which currently should be drawn, initially empty.
 	
+	// Motor angle sizes.
 	private int turndegrees = 216; // 360 degrees * (24 gear teeth / 8 gear teeth) gear multiplier / 5 teeth = 216 degree / wheel teeth
 	private int smallStepSize = 1; // Define the size of a small step as an angle in degrees.
 	
-	private LED led; // Create led object to control it
-	private GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
-	
+	// LED variables.
+	private LED led; // The LED object which is needed to control the back light color of the buttons.
 	private int lastLEDSpeed = -1;
 	private String lastLEDColor = null;
+	
+	// Graphics object used to draw shaped on the LCD.
+	private GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
 
-	// Import motor related things.
+	// Allocate variables for motor related things, like port detection.
 	private Port[] ports = new Port[4];
 	private ConfigurationPort[] configPorts = new ConfigurationPort[4];
 	private int motorPort;					// Stores the number of the motor port on which the motor is detected.
@@ -58,7 +61,7 @@ public class Output implements EV3SensorConstants {
 		
 		// Wait until a motor is detected.
 		do {
-			updateSensors();
+			updateMotorPort();
 		} while(motorPort == -1);
 		
 		// Close all ports, to allow to open motor ports on it.
@@ -85,15 +88,17 @@ public class Output implements EV3SensorConstants {
 			break;
 		}
 		
-		// Maximize the motor speed for faster sorting.
+		// Maximize the motor speed for even faster sorting.
 		motor.setSpeed(motor.getMaxSpeed());
-		motor.setStallThreshold(2, 500); // Defines stalled as pushed out of position for 2 degrees and 500 ms. 
+
+		// Defines stalled as pushed out of position for 2 degrees and 500 ms.
+		motor.setStallThreshold(2, 500); 
 	}
 	
 	/**
-	 * Update sensor position. 
+	 * Update motor port position. 
 	 */
-	private boolean updateSensors() {
+	private boolean updateMotorPort() {
 		motorPort = -1; // Reset all values.
 		
 		// Go through all ports and read the port type from them.
@@ -229,14 +234,18 @@ public class Output implements EV3SensorConstants {
 		
 		// Loop through all words, until all words are drawn or the screen is segment if full.
 		for(int i = 0; i < words.length && line + 1 < height; i++) {
-			if(lineLength + words[i].length() >= width) { // Check if the next word first on the screen, if it doesn't then draw the previous line and resume on the next one.
+			// Check if the next word fits on the current line, if it doesn't then draw the previous line and resume on the next one.
+			if(lineLength + words[i].length() >= width) {
+				// Draw the current line.
 				LCD.drawString(currentLine, x, line);
 				
+				// Resume to the next line.
 				line++;
 				currentLine = "";
 				lineLength = 0;
 			}
 			
+			// Add the word evaluated in this iteration to the current line.
 			lineLength += words[i].length() + 1;
 			currentLine += words[i] + " ";
 		}
@@ -246,18 +255,20 @@ public class Output implements EV3SensorConstants {
 
 	/**
 	 * Draw the currently active message on the screen.
+	 * @param The current state.
 	 */
 	public void setMessage(State s) {
 		LCD.clear();								// Clear the screen prior drawing.
 		textSegment(currentMessage, 0, 0, 19, 5);  	// Draw the message.
 
+		// Define the size and position of the disk bar.
 		int barWidth = 92;
 		int barHeight = 10;
 		int x = 84;
 		int y = 82;
 		
-		g.drawRect(x, y, barWidth, barHeight);
-		g.fillRect(x, y, sv.getDiskCount() * barWidth / 12, barHeight); // One letter has size of +- 9 x 16 pixels
+		g.drawRect(x, y, barWidth, barHeight); // Draw the outline.
+		g.fillRect(x, y, sv.getDiskCount() * barWidth / 12, barHeight); // Fill the bar.
 		
 		// Draw the disk counters on the screen.
 		LCD.drawString("Disks:" + sv.getDiskCount(), 0, 5);
@@ -270,6 +281,10 @@ public class Output implements EV3SensorConstants {
 		LCD.refresh(); // Refresh the screen to update the content on it.
 	}
 
+	/**
+	 * Set the current LED state.
+	 * @param State as a string, options are "error", "userInput", and "busy".
+	 */
 	public void setLEDState(String state) {
 		switch(state) {
 		case "error":
@@ -284,6 +299,11 @@ public class Output implements EV3SensorConstants {
 		}
 	}
 	
+	/**
+	 * Sets the LED color and speed.
+	 * @param The color of the LED as a string, options are "red", "orange", and "green". 
+	 * @param speed
+	 */
 	public void setLED(String color, int speed) {// Requires a color and a speed 0, 1 or 2
 		led = LocalEV3.ev3.getLED();
 		speed *= 3; // Is needed for the right number
@@ -308,7 +328,6 @@ public class Output implements EV3SensorConstants {
 	/**
 	 * When the color sensor detects a black disk, turn one teeth right.
 	 */
-	
 	public void motorSortBlack() {
 		turnMotor(turndegrees);
 	}
@@ -352,7 +371,10 @@ public class Output implements EV3SensorConstants {
 		motor.rotateTo(targetAngle, false);
 	}
 	
-	
+	/**
+	 * Turn the motor while keeping track of a stalling motor.
+	 * @param The angle which it should turn.
+	 */
 	private void turnMotor(int angle) {
 		motor.rotate(angle, true); // Turn the motor, return immediately.
 		
