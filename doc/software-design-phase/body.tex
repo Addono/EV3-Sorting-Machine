@@ -1,0 +1,116 @@
+\section{Structure} \label{software-design:structure}
+
+Since we are not going to give an elementary Java program in this section, we provide some pseudo-code to give a nice overview of how the actual source code that will be written in Java should be structured and implemented. We have seen the finite automaton of our program at the previous section. We are going to try to stick to it as much as possible when writing the actual source code. To do this we need a nice structured way of implementing the automaton into software that simulates its behavior. The different components that we will actually need to simulate or to implement a finite automaton are listed down below. Our finite automaton is a Mealy Machine, which means that the output values are determined by both the current state of the automaton and the current input. To simulate we are going to use the following components:
+
+\begin{figure}[H]
+    \centering
+  \begin{tikzpicture}[->,>=stealth',auto,node distance=2.4cm,thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+    \node[main node] (4) {\ref{SD:Update}};
+      \node[main node] (2) [above of=4]{\ref{SD:Decision}};
+    \node[main node] (1) [left of=2]{\ref{SD:Condition}};
+    \node[main node] (3) [right of=2]{\ref{SD:Output}};
+    \node[main node] (5) [left of=4]{\ref{SD:Initialization}};
+    \node[main node] (6) [right of=4]{\ref{SD:Termination}};
+
+    \path[every node/.style={font=\sffamily\small}]
+      (4) edge[bend left] node [left] {} (2)
+      (2) edge[bend left] node [left] {} (4)
+
+      (2) edge[bend right] node [left] {} (1)
+
+      (2) edge[bend right] node [left] {} (3)
+
+      (4) edge[bend right] node [right] {} (6)
+      (5) edge[bend right] node [left] {} (4)
+
+	  (1) edge[bend right, dotted] node [left] {} (2);
+      %(3) edge[bend right, dotted] node [left] {} (2);
+  \end{tikzpicture}
+  \caption{Software structure. The solid edges represent calls to a different class of functions. The dotted edges are there to show that we make a call to obtain data from one set of functions to use in another set of functions.}
+\end{figure}
+
+\begin{enumerate}
+	\item Condition functions \label{SD:Condition}\\ 
+    Functions that check whether certain conditions (mainly boils down to checking input)  are met. For example is the yes-button pressed, or is the reading value of the color sensor within a certain range. 
+    \item Decision functions \label{SD:Decision} \\
+    These functions are basically the transitions in the automaton that occur based on certain conditions (see condition functions). And since our automaton is a Mealy Machine. The output is only dependent on these conditions and the current state the automaton is in.
+    \item Output functions and state variables \label{SD:Output} \\
+    The output functions and the functions for the state variables are being called when certain conditions are met in certain states. The decision functions thus decide to which state we proceed (or that we should stay in the same state) and what the output functions and state variable functions should  be called in this transition.
+    \item Update	\label{SD:Update} \\
+    This is an update function of the states. It makes sure to update the states and the message on the screen of the brick
+    \item Initialization \label{SD:Initialization} \\
+    We calibrate the wheel first and initialize the input before we run the actual state machine.
+    \item Termination \label{SD:Termination} \\
+    The program is terminated by the user of the sorting machine.
+\end{enumerate}
+
+We are going to explain the different components of the program in more details below.
+
+\section{Condition Functions}
+The condition functions check whether certain conditions are met. We are going to be using condition functions to check the following things:
+
+\begin{itemize}
+\item to check whether the color sensor detects red
+\item to check whether the color sensor detects white 
+\item to check whether the color sensor is detects black
+\item to check whether the push sensor at the beginning of the tube is pressed
+\item to check whether the start/stop button is pressed
+\item to check whether the yes button is pressed
+\item to check whether the no button is pressed
+\item to check whether there is no disk at all in front of the touch sensor
+\item to check whether one of the red teeth is in front of the touch sensor (for calibration purposes) 
+\end{itemize}
+These are all based on inputs of the sorting machine. \\
+
+The listed functions are all boolean functions. They will thus return true or false, based on whether a certain condition is met. In the decision functions we then call these condition functions, and the condition function will return a boolean value. We can then use this boolean function in the guard of an if statement for example. To give you an idea of how we have structured the condition functions, I am going to give some pseudo code of some of these functions.
+
+\lstinputlisting[language=Java]{\pseudocode condition_functions.java}
+
+\section{Decision Functions}
+The decision functions basically represent the transitions between the states in the finite automaton. These transitions are different for each state, and the behaviour depends on the values returned by the condition functions. For example when we are in the resting state we ask the user whether the tube is empty or not. If the user then presses the yes button the disk counter will be set to zero (state variable) and we proceed to the Waiting state. If the no button is pressed, we proceed to the state CheckDiskPresent without calling any output functions or functions for the state variables. In addition if we insert disks in this state (check condition function that checks whether the push sensor at the beginning of the tube is pressed), then we proceed to the InsertedEarly state. If none of these conditions (checked by condition functions) are met, we stay in the resting state. In pseudo-code this will look something like: \newpage
+
+\lstinputlisting[language=Java]{\pseudocode rest_state.java}
+
+Here are some more examples of decision functions that we are going to implement in the next phase. The comments in the pseudo-code will explain the construction and structure of the decision function.\\ 
+
+\lstinputlisting[language=Java]{\pseudocode inserted_early.java}
+
+The next example of a decision function is the ExpectsDisk state. This is one of the states where the actual sorting happens. There are some comments added to explain the underlying structure etc. \\
+
+ \lstinputlisting[language=Java]{\pseudocode expect_disks.java}
+ 
+ \section{Output functions and State Variables}
+The output functions and the functions for the state variables are being called when certain conditions are met in certain states. We have seen some examples of this in the previous section (the decision functions). If you look at the last piece of pseudo-code (of the ExpectsDisk state). The decision functions thus decides to which state we proceed (or that we should stay in the same state), and what the output functions and state variable functions should  be called in this transition. We have output functions that simply send messages to the screen to notify the user or to ask the user something. At the same time we make use of the led-lights of the button. Wen we send a message we immediately set the color of the led-lights. When there is an error related message we make the light red. In addition the we make the light blink at a high frequency. When we ask for user-input we make the light orange and make it also blink, but at a lower frequency than with the error-related red light. At last we have screen messages that are output when the machine is just busy doing something (and everything goes fine). We then just make the light of the buttons green (no blinking). You can see some examples of output functions for the messages and the blinking of the lights below. 
+
+ \lstinputlisting[language=Java]{\pseudocode output_functions_messages.java}
+ 
+ We have furthermore output functions that notify the motor in what direction it should move, how far it should move and at what speed. We furthermore have some output functions that are specific for the calibration of the wheel. We calibrate the wheel so that the disks can fall exactly in the gaps of the wheel. You have read the workings of the calibration in the software specification part. You can see some examples of output functions related to the motor (rotations) and the calibration below.
+ 
+\lstinputlisting[language=Java]{\pseudocode output_functions_motor.java}
+
+\newpage We have various state variables that we use in our finite automaton based program. We have state variables for the disk counter, the black disk counter, the white disk counter and calibration points. We have functions for these state variables that set the counters to 0, functions that increase the counters, functions that decrease the counters, and functions that give the current values of the counter. We will again give some examples of these functions. 
+
+\lstinputlisting[language=Java]{\pseudocode state_variables.java}
+
+\section{Update}
+We furthermore have an update function of the states. It makes sure to update the states and the message on the screen of the brick. We also have implemented the stop button in the update function. When this button is pressed we go back to the resting state. This was not part of our finite automaton since it would be a little bit useless to add a stop transition from each state to the resting state. The finite automaton (the UPPAAL model for example) is in that way a simplification of the actual finite automaton implemented in our source code. Because the finite automaton would otherwise would be very complex and you would have no overview at all.
+
+\lstinputlisting[language=Java]{\pseudocode update_function.java}
+\newpage
+\section{Initialization and Termination}
+Before we start running the actual program (that sorts the disks) we initialize the input (sensors etc.) and calibrate the wheel so that one of the five gaps where the disks can fall is parallel to the end of the tube. The code for the initialization is very java specific and includes a lot of things of the EV3 leJOS library. I will therefore not include any pseudo-code of this. In the next section (Software Implementation and Integration and the appendix) you can have a look at the code that initializes the input. We furthermore have the abort button that terminates the whole program. This button was sort of already implemented in the EV3 brick. When a program is running and you click the upper-left button (the one that is right under the screen), the program will be terminated and as a result everything will stop immediately. Since this is exactly what the abort button should do of our sorting machine, we decided to just make this the abort button and don't introduce another button as the abort button that would do the same thing. After you have pressed the abort button you can restart the program however (immediately or in the future) and the program will start from scratch. If there were still some disk left in the tube of the last run of the program, this is no problem, since this is taking care of in our program. \\
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+

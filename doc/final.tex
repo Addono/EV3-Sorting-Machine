@@ -1,0 +1,64 @@
+% Use the final option to remove to-do's.
+%\documentclass[final]{report}
+\documentclass{report}
+
+\usepackage{graphicx}
+
+\input{global-header.tex} % All necessary packages and commands should be here.
+
+% Set title and author
+\settitle{Final Document}{0.3}
+\setauthor{A.K.~Bokharouss}{a.k.bokharouss@student.tue.nl}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\setlength{\parskip}{.5em}
+
+\chapter{Preface}
+    \input{\final preface.tex}
+
+\chapter{Summary}
+    \input{\final summary.tex}
+
+% Just an example of how a chapter is denoted.
+\chapter{Orientation phase} \label{orientation}
+    \input{\orientation summary.tex}
+    \input{\orientation body.tex}
+    %\input{\orientation conclusion.tex}
+    \input{\orientation literature.tex}
+
+\chapter{Machine Design phase} \label{machine-design}
+    \input{\machineDesign summary.tex}
+    \input{\machineDesign body.tex}
+    \input{\machineDesign conclusion.tex}
+    %\input{\machineDesign literature.tex}
+
+\chapter{Software Specification phase} \label{software-specification}
+    \input{\softwareSpecification summary.tex}
+    \input{\softwareSpecification body.tex}
+    \input{\softwareSpecification conclusion.tex}
+
+\chapter{Software Design phase} \label{software-design}
+    \input{\softwareDesign preface.tex}
+    \input{\softwareDesign summary.tex}
+    \input{\softwareDesign body.tex}
+    %\input{\softwareDesign conclusion.tex}
+
+\chapter{Software Implementation and Integration phase} \label{software-implementation}
+The source code created in this phase can be found in \aref{a:sourceCode}.
+    \input{\softwareImplementation summary.tex}
+    \input{\softwareImplementation body.tex}
+
+\chapter{System Validation and Testing phase} \label{system-validation}
+    \input{\systemValidation summary.tex}
+    \input{\systemValidation body.tex}
+
+\chapter{Conclusion}
+    \input{\final conclusion.tex}
+
+\input{\appendixFolder appendix.tex}
+\end{document}

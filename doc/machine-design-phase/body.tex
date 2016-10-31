@@ -1,0 +1,72 @@
+\section{System Level Requirements} \label{SLR}
+The System Level Requirements (SLRs) specify what can be expected from the sorting machine, how it should be operated, and under which circumstances it will function as specified. \seeref{machine-design:design-decisions}
+
+\subsection{Requirements} \label{SLR:requirements}
+The system should meet the following requirements, if the \seeref{SLR:use-cases} and \seeref{SLR:user-constraints} are met:\\
+
+\hfill\begin{minipage}{\dimexpr\textwidth-3em}
+If sorting is started by the operator, it should sort 12 black and white disks, based on their difference in value of reflection of the visible light spectrum - thus grouping all black discs, and grouping all white discs. Within 3 minutes the machine should be finished and all discs should be sorted, both groups of discs should then be in their own dedicated container. Both containers have the specific purpose to contain one group, which is defined beforehand. When the sorting machine is powered on it should show in which state it is and show all detected problems it encounters.
+\end{minipage}
+
+\subsection{Use-cases} \label{SLR:use-cases}
+To sort one disk, the machine needs to do the following: First the wheel is supposed to be calibrated to the right starting angle. Whether this is either of the five ways practically doesn't matter, however mathematically it can be convenient to start at a certain angle each time the machine starts. After the 
+confirms that the tube is empty, when inserting a disk in the tube, a counter goes up. This counter holds the value of the number of disks in the tube. This will be displayed on the display of the EV3 brick. In the case of one disk, this value is supposed to be 1. When the disk then exits the tube it enters the wheel, blocking the colour sensor that was originally facing the gray outside of the wheel. We now get the value of the sensor. If the disk gets stuck in the tube, we can now detect this, since the value of the colour sensor will remain the same. Otherwise, we can detect whether the current disk is black or white and then move the wheel $\dfrac{360}{5}^{\circ}$ to the left or right. The disk now drops in the correct container, either the one for white disks or the one for the black ones. The display will now show 0 for the disks still in the tube and have white or black depending on the colour set to 1. If one of the disks gets stuck or somehow blocks the wheel, we can detect this using the sensors in the rotation motor. We will inform the user about this and ask what to do.
+
+To sort more than one disk mainly is the same as sorting but one. The only difference is that the second one and those thereafter stay in the tube while the first one is being scanned. The display will still show the number of disks in the tube, how many black ones are already in the basked and how many white disks. When the first one is done, the wheel moves it to the left or right, unveiling a new slot to the tube where then the next disk can fall in, get scanned and so on. When no more disks slide in the wheel, the machine will stop. Then the machine will ask tell the user it's done and ask for a button press to confirm to go to the resting state again.
+
+Our machine also will have the ability to calibrate. This happens when you turn it on or when being in the resting state and pressing enter. Of course the user will be informed by the display. It will try and remove all the disks currently in the tube (for example the disks that are left after an abort) and reset the wheel to the correct starting position using a pressure sensor and the wheel itself.
+
+When the machine is sorting and the user presses the start/stop button, the machine should finish its cycle and keep still after the current disk has been pushed to the correct side. It will return to the resting state. When the user presses the abort button, the program should terminate and the machine should immediately stop.
+
+\subsection{User constraints} \label{SLR:user-constraints}
+\begin{enumerate}
+	\item The user shouldn't unplug any of the sensors or the motor while running the program.
+	\item The tube should be empty when booting the program. Mostly the program can handle it when this is not the case, however this should be avoided.
+	\item The user should make sure, the motor is connected to one of the upper slots of the brick and the sensors to one of the bottom slots.
+	\item The user should make sure the batteries inside the EV3 brick have enough power, either with the provided battery, a set of AA batteries or by connecting it to the charger.
+	\item The user should check if all the teeth of the wheel are still ok. While not running the program, the user should manually turn the wheel using the handle and give all the teeth a push inwards to make sure the wheel won't get stuck with its teeth to the bottom.
+	\item Calibration of the machine is necessary before the machine can start sorting, if the ambient light of the environment of the system changes significantly a calibration might be necessary before the system will function as specified in the \emph{Requirements} (see \ref{SLR:requirements}). The calibration will be done by moving the sorting wheel around until a certain extension on the wheel passes the colour sensor. Note again that this must be done \textit{before} a disk is entered.
+    \item The user is required to put the disks upside down (hollow side upwards) into the machine. This is to lower the chance of the disk getting stuck in the tube as well as counting the disk as one and not as two disks (due to their form factor).
+    \item The user is required to enter the disks one by one since the pressure sensor might otherwise detect two disks as one.
+    \item In principle all lighting conditions should work, since the sensor looks at the direct reflection of the object in front of it neglecting ambient light. However, to ensure stability, extreme lighting conditions should be avoided.
+    \item When the user presses the abort button he should remove the disk if the disk is blocking the wheel to rotate or solve any problem that the machine cannot solve with calibrating. After this he should let the machine do a calibration. 
+    \item The machine needs to be upright correctly and the tube has to have an angle (most likely this will be fixed). This is due to the machine using gravity to function. Also, the machine shouldn't be exposed to high accelerations.
+    \item When inserting the disks, the user might want to give them an extra push downwards the tube using the provided stick to get them past the pressure sensor. However the user should be careful not the press the sensor another time since then the machine will detect two disks while there is only one in the tube. 
+    \item The user shouldn't press the touch sensor itself.
+\end{enumerate}
+
+\subsection{Safety Properties} \label{SLR:safety-properties}
+\begin{enumerate}
+  \item After pressing the abort button the machine should stop immediately when running (This will be around 5ms).
+  \item After pressing the stop button, the machine should stop when running after its current cycle.
+  \item When the light sensor detects a colour different than gray, black or white. The wheel is either not calibrated or a disk or object of a different colour has come out of the tube. The user will be informed and asked if he wants to continue the machine or re-calibrate.
+  \item When the counter has a value of $counter\leq0$ and the light sensor detects the colour white or black, it should ask the user that an error has occurred and ask whether to continue or to stop the machine.
+  \item When the counter has a value of $counter>0$ and the light sensor detects the colour gray, it should inform the user a disk has gotten stuck in the tube.
+  \item When the wheel gets stuck (so when we give the motor a certain speed but it doesn't detect a change in angle), the program should abort and inform the user.
+\end{enumerate}
+
+\subsection{Machine Interface}
+The only attributes connected to the EV3 are the pressure sensors, the colour sensor and the motor. Since we can just connect them to the EV3 without any hassle, part will explain a bit about how they actually work and what values they deliver. There are also a number of six buttons on the EV3 brick itself which we will use.
+
+The pressure sensors give a value of either 1 or 0 depending on their state. There's one pressure sensor at the start of the tube that delivers a 1 signal whenever a disk is passing by. The other one is attached near the wheel and returns a 1 whenever the wheel is in its initial position, so when the extended bit on the wheel touches it.
+
+The light sensor returns a value between 0 and 100 depending on which colour it detects. We use its colour-detecting mode for this.
+
+The motor is multiple things. First and mostly it's used to rotate a rod, some gears and then of course the wheel. This can be done in various speeds, various acceleration and of course various time. Secondly the motor is able to perceive its current angle and whether it's blocked or not.
+
+\section{Design decisions} \label{machine-design:design-decisions}
+As you can see from the video in the conclusion, we've chosen for a tilted design with a sorting wheel to sort the disks. 
+
+We first thought about a vertical design, however, due to the design of the Lego pieces, we couldn't come up with a clean way to make a vertical tube without the disks flipping over. With a tilted tube, the disks can lie flat and slide downwards. The tube had to be extended a bit, this had to be done, since not all twelve disks actually fitted inside it. Also, at the end of the tube, we higher-ed a part half a piece, to lessen the times for the disk getting stuck. To have the tube tilted, we designed a stand that would make sure the tube got tilted, but also to en-stable the machine itself.
+
+We did change a lot about the wheel during the process. We moved it up- and downwards, changed the color behind the disks from gray to red (to improve the calibration part) and added the rubber pieces to make sure no disks slide past the wheel. The teeth of the wheel that prevent the disks from going sideways were also changed a lot in the design. Eventually, after some heavy testing, we gave them a height of 2.5 Lego pieces. In the end, this seemed to us to be the most stable construction after testing. 
+
+We did think about having a rod pushing the disk either left or right, or even up or down, but we didn't know how to realize it with Legos in a stable way. That is why we didn't go for such a design.
+
+Also, we had to add the two pallets on the side since otherwise the disks would go flying off. We attached them like this to have the disks bounce off and fall downwards in one of the two containers
+
+We put the color sensor underneath the wheel to have the best possible readings. The wheel blocks off the ambient light and due to the sensor being so close to the disks, we can get accurate readings.
+
+On the top we put the sensor in this way and narrowed down the hole to make sure the disks actually press it. 
+
+Finally we attached the motor like this to have the most stable construction and because in this way it was possible to reach the wheel with gears from the motor. This reaching tended to be a bit of a problem at the first try, but after moving the motor 1 upwards, this was a lot easier. For testing purposes we also added a handle for being able to manually turn the wheel.

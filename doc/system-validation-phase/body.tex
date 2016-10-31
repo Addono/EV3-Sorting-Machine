@@ -1,0 +1,380 @@
+\section{Code Review} \label{system-validation:code-review}
+\begin{comment}
+To give an overview of the major changes we did in the code we here have a small summary: 
+
+\bigskip
+\todo{Still wondering, why is this any relevant?}
+\begin{itemize}
+\item We started by creating the document and made the state structure we are using. When the structure was done we could start defining outputs inputs and states, the fun part. 
+\item We added all the states of the UPPAAL model we had before and using if's and else's we could change the state to the next one based upon the inputs we got. 
+\item We implemented the color input functions and made it so that we force a color update when we're trying to pull a color from the sensor. 
+\item A lot of cleaning up was done.
+\item We added the output object, so we could start defining outputs as well and to test if the senors got the right values we made a little test program which was not included in the final one. 
+\item Some state fixing happened again and we added the motor turning command in the output object file. 
+\item After some some more tweaking of the motor and some more state fixing, we added the state variables. This was to be able to display things like the disk count and the amount of white and black disks sorted.
+\item Just as with the input we made a little program to test the output and we tweaked the output file itself to have the screen display what we wanted. 
+\item Some more state fixing, motor tweaking, state variable fixing later, we added a mode that would let us run the state machine step by step for testing purposes. 
+\item Next, there was some more cleaning up, tweaking the display messages, fixing bugs, solving problems, added error messages and even added a new state so the machine would catch when a user inserts a disk too early. 
+\item Next we made the machine a bit faster by decreasing the delay and we made it so that we can have any sensor in either of the 1-4 ports and the motor in any of the A-D ports, also we added LED response. 
+\item After some more merging and cleaning up we added the calibration part of the machine and started tweaking that. 
+\item We implemented the Abort button, cleaned up some more and changed the sensor detecting gray to it detecting the red of the wheel. 
+\item We updated the UI some more and added a detection of when the wheel was stuck.
+\item Finally . \todo{add stuff when we're done}
+
+\end{itemize}
+%\bigskip
+
+ To my knowledge this can be removed
+\end{comment}
+Here follows some code reviews we have done while writing the code. Of course there have been a lot of changes to the code individually, but in these phases we checked up on each others code:
+
+%\todo{Why is it relevant on whoms laptop things are made?}\todo{said so in the guide}
+\begin{itemize}
+\item\textit{\textbf{Pair Programming:} March March 16th, Adriaan and Abdel}
+
+Here Adriaan and Abdel were working together on improving the code overall, removing dead code, improving some messages, rewriting some states just to improve clarity and functionality. Also the detection of a stalled motor was added by Adriaan and approved by Abdel at this time.
+\newpage
+\item\textit{\textbf{Pair Programming:} March 9th and 15th, Jolan and Adriaan}
+
+This pair programming was spread out across two days where Jolan on the first day found out the commands, wrote the most part and Adriaan on the second day corrected and fixed the problems Jolan faced. We wanted to add feedback from the LEDs to the user about what the machine is doing. Green being 'busy', orange being 'require attention' and red being 'error'. However Jolan ran into some problems where red wouldn't flash as intended in some states, Adriaan fixed this and cleaned up the code.
+
+\item \textit{\textbf{Pair Programming:} March 8th, Ardiaan and Jolan}
+
+We found out we didn't have any detection for when a user entered a disk before the machine was actually in the correct state. So we made an extra state from the Resting state to the flushing part of the machine, so that when a user enters a disk too early (so in the Resting state), the machine will inform that it is too early and will prompt to empty the tube. The programming part mostly was done on Jolan's laptop while Adriaan was giving input and helped cleaning up.
+
+\item \textit{\textbf{Walktrough:} March 4th, Adriaan,  Abdel and Jolan}
+
+We added a way to go through the program step by step by pressing the up-button (later called the stop-button). In this way we could exactly view how the machine operated in each state and if it malfunctioned or displayed something weird, we changed bits and pieces of the code to solve this. For example, we here found out we didn't yet have a white and black disk counter on the screen, so we added this in the Output file (this was done on Adriaans laptop). We also noticed that not everywhere camel case was used for the method names, so we fixed that too.
+
+\item\textit{\textbf{Pair Programming:} March 4th, Adriaan and Abdel}
+
+We were implementing the motor which needed some tweaking to have it turn exactly the amount of degrees to push off the disk in the right direction and end up in the correct position for the next one. First Abdel made it $216^{\circ}$ and created the variable $turndegrees$ for clarity. While this was going on Adriaan was watching and giving input to Abdel. Next, Abdel changed $turndegrees$ to $288^{\circ}$, after redoing the calculations,  however 216 appeared to be working better so he reverted.
+%\todo{Why would we admit this guessing?}\\
+%\todo{Yes, why exactly?}
+
+\item\textit{\textbf{Pair Programming:} March 2nd, Bogdan and Jolan}
+
+Bogdan created the Output file and made it so that it contained some error messages we might need in the future. Jolan observed and co-operated and later on, while he was working on the States file, he added some more messages that were relevant for that state. Bogdan in his turn watched and agreed or disagreed on those messages.
+
+\end{itemize}
+
+
+
+
+\section{Test Cases} \label{system-validation:test-cases}
+%\todo{Let it get check by someone who didn't wrote it for incorrect/unnecessary/unclear statements.}
+
+
+\textbf{Orientation phase:}
+\begin{itemize}
+
+\begin{comment}
+\begin{itemize}
+	\item Testing light/color-sensor reading in general.
+	\item Testing at which point the pressure-sensor gives the signal for pressed.
+\end{itemize}
+\end{comment}
+
+
+\item Testing light/color-sensor readings in general:\\
+We were wondering what our possibilities are, in detecting objects and colors with the one light/color-sensor we are given.\\
+So we tested what the light/color-sensor can detect and distinguish and also the distance at which it sill functions properly.\\
+From our tests we could conclude that:\\
+The light/color-sensor can detect the intensity of red, green and blue in front of the light/color-sensor as well as just object detection over a distance of a few centimeters. It can easily distinguish the white disks from the black disks. However, detecting the difference between the black disks and the gray LEGO components is less clear.\\
+
+
+\item Testing at which point the pressure-sensor gives the signal for pressed:\\
+We were wondering how sensitive the pressure-sensor is.\\
+So we tested at what point the pressure-sensor gives the signal of being pressed and get a feeling of the amount of force needed to get to the pressed state.\\
+From our tests we could conclude that:\\
+The pressure-sensor is clearly not sensitive enough to be triggered by the weight of the disks.\\
+
+\end{itemize}
+
+\textbf{Machine Design phase:}
+\begin{itemize}
+
+\begin{comment}
+\begin{itemize}
+	\item Testing light/color-sensor readings on LEGO components, that could be used for constructing the sorting wheel in comparison to the readings we get from the disks.
+	\item Testing the functionality of our tube design.
+	\item Testing different ways of how to count the amount of disk inserted into the tube.   % <-- can/should I remove this one?
+	\item Testing different ways of pushing disks into the tube and past the pressure-sensor.
+	\item Testing how the system handles disk that get inserted with the open end down instead of up.
+    \item Testing different designs of the sorting wheel.
+\end{itemize}
+\end{comment}
+
+
+\item{Testing light/color-sensor readings on LEGO components, that could be used for constructing the sorting wheel, in comparison to the readings we get from the disks:\\ % might be removed because of the last test case at Orientation phase.
+We were wondering if the light/color-sensor can distinguish the LEGO components from the disks.\\
+So we tested different colors of LEGO at different distances to see if we can detect them as not being a disk.\\
+From our tests we could conclude that:\\
+It is possible, but up close to the sensor the difference between gray LEGO parts and black disks is to small to be reliable.}\\
+
+
+\item{Testing the functionality of our tube design:\\
+We were wondering if the design of our tube works properly and if it was the right choice.\\
+So we tested a few designs. We first tested a few designs with the tube vertically up. Then we tested several designs with the tube at an angle.\\
+From our tests we could conclude that:\\
+It is hard to make a vertical tube with LEGO in which the disks won't flip into an unfavorable position.
+For a more horizontal tube to work, the angle between the tube and the ground should be great enough that gravity is enough to get all disks to the bottom without one getting stuck on the way.}\\
+
+
+\item{Testing different ways of how to count the amount of disks inserted into the tube:\\% <-- can/should I remove this one?
+We were wondering what would be a good way of counting the amount of disks that we insert into the tube.\\
+So we tested a few designs with a pressure-sensor at the entrance of the tube.\\
+From our tests we could conclude that:\\
+For a tube design with a pressure-sensor at the entrance, you should make the height of the tube entrance small enough that you need to force the disks past the pressure-sensor to get it into the tube.}\\
+
+
+\item {Testing different ways of pushing disks into the tube:\\
+We were wondering what is a good and reliable way of inserting disks into the tube.\\
+So we tested several cases:
+\begin{enumerate}[a.]
+\item{A case where a disk gets pushed past the pressure-sensor with the next disk.}
+\item{A case where a disk gets pushed past the pressure-sensor using ones finger.}
+\item{A case where a disk gets pushed past the pressure-sensor with a stick made from LEGO.}
+\end{enumerate}
+From our tests we could conclude that:
+\begin{enumerate}
+\item{You should not use the next disk to push the previous disk past the sensor, since it will not release the pressure-sensor in between, counting a hole batch of disk as 1 insertion.}
+\item{You better not use your finger to push a disk past the pressure-sensor, because there is a decent chance that you accidentally press the pressure-sensor an extra time.}
+\item{It is advised to use the LEGO stick to press the disks past the pressure-sensor, since that is the most reliable way to insert disks while triggering the pressure-sensor the right amount of times.}\\
+\end{enumerate}}
+
+
+\item{Testing how the system handles disks that get inserted with the open end down instead of up:\\
+We were wondering if inserting a disk with the open end up or down would make a difference.\\
+So we tested inserting a few disks with the open side down and a few disks with the open side up.\\
+From our tests we could conclude that:\\
+The systems works even if you insert disks with the open side down, although that would increase the change of troubles. Putting disks in with the the open end up is the more reliable option.}\\
+
+
+\item{Testing different designs of the sorting wheel:\\
+We were wondering what would be an efficient design of the sorting wheel\\
+So we tested several designs over the project.\\
+From our tests we could conclude that:\\
+We need a wheel of which the light/color-sensor can detect the LEGO parts between the openings for the disks and distinguish that from the disks itself. This doesn't work well with gray LEGO parts.}\\
+
+
+\end{itemize}
+
+\textbf{Software phases:}
+\begin{itemize}
+
+\begin{comment}
+\begin{itemize}
+	\item Testing motor capabilities while integrated into the system.
+	\item Testing light/color-sensor readings while sorting with our current machine design.
+	\item Test if all disks of the same color, out of black and white, get sorted to the right container.
+	\item Testing the display of the EV3 brick.
+	\item Disks in the tube while not yet calibrated.
+	\item Testing the systems behavior when the pressure-sensor gets triggered more or less often as disks get inserted.
+	\item Disk stuck on the pressure-sensor (as in keeps giving the signal for pressed).
+	\item Testing light/color-sensor readings while running the sorting sequence and using/debugging code.
+	\item Cables in different ports.
+	\item Testing the behavior of the system when Cables get pulled out, before and during execution.
+	\item Testing if all the disks will always be caught by one of the containers.
+	\item Testing all interaction between the user and the EV3 brick, when asked for input.
+	\item Testing all interaction between the user and the EV3 brick, when there is no request for input from the user.
+	\item Testing if all types of the error detection get triggered, when and only when, they are expected to happen.
+	\item Testing the behavior of all the errors.
+	\item Testing a few normal runs right after each other to confirm reliability.
+\end{itemize}
+\end{comment}
+
+
+\item Testing motor capabilities while integrated into the system:\\
+We were wondering what the capabilities of the motor are once integrated into the system.\\
+So using code, we tested the possibilities of the following actions.
+\begin{enumerate}[a.]
+\item{Testing the maximum velocity of the sorting wheel, by letting the motor draw the maximum power it can get from the battery.}
+\item{Testing the smallest angle the sorting-wheel can turn, by letting the motor turn with the smallest angle it can.}
+\item{Testing if the motor could detect small angle changes.}
+\item{Testing the amount of force the motor delivered on the wheel by blocking it with a finger.}
+\end{enumerate}
+From our tests we could conclude that:
+\begin{enumerate}
+\item{The maximum velocity is dependent on the amount of charge in the battery.}
+\item{The motor can turn at a very small angle. Resulting in an even smaller rotation of the sorting wheel, because of the gears between the motor and the wheel.}
+\item{The motor is very capable of checking if it indeed turned the amount of degrees it should have turned.}
+\item{The motor can deliver more than enough force than is needed to move the disks around.}\\
+\end{enumerate}
+
+
+\item Testing light/color-sensor readings while sorting with our current machine design:\\
+We were wondering if the way placed the light/color-sensor in the system and the current sorting wheel design, can cause problems with reading the color values of the wheel. \\
+So we performed several tests to rule out the problems.
+From our tests we could conclude that:\\
+The, into the system integrated, light/color-sensor can correctly tell apart the colors of the wheel and the disks. Which are red, less red, black and white.\\
+
+
+\item Testing if all disks of the same color, out of black and white, get sorted to the correct side:\\
+We were wondering if it can happen that, after sorting there would be a black disk among the white disks or a with disk among the black disks.\\ 
+So every time we made significant changes in the design our code, we tested sorting all the disks. \\
+From our tests we could conclude that:\\
+In all test cases, where all disks got sorted without getting stuck, all disks got sorted to the correct side.\\
+
+
+\item Testing the display of the EV3 brick:\\
+We were wondering what we can display on the display of the brick and if the EV3 brick would display the right text when certain situation like errors would occur.\\
+So every time we improved the UI and when we added something like an error message or a counter, we tested and observed if all the characters and drawings were correctly displayed on the display of the brick.\\
+From our tests we could conclude that:\\
+Everything we put on the display was displayed exactly as we expected it to.\\
+
+
+\item Disks in the tube while not yet calibrated:\\
+We were wondering how the system would behave if there are disks in the tube while the wheel has not yet been calibrated.\\
+So we tested running the calibration code while there are disks in the tube.\\
+From our tests we could conclude that:\\
+The system can calibrate with disks in the tube, but it is advised not to do so, because it is unreliable.\\
+
+
+\item Testing the systems behavior when the pressure-sensor gets triggered more or less often as disks get inserted:\\
+We were wondering how the system would behave if you trigger the pressure-sensor a different amount of times than the amount of disks that will be in the tube. In other words, making the disk counter variable contain a different number than the actual amount of disks in the tube.\\
+To establish what this behavior is, we ran a couple of tests:
+\begin{enumerate}[a.]
+\item A situation with ``$disk counter == 0$ while there are disks in the tube'', by having a filled tube before running the insertion code.
+\item Situations with ``$disk counter <$ amount of disks in the tube'', by already having a few disks in the tube before running the insertion code. once with a difference of 1 and once with a greater difference.
+\item A situation with ``$disk counter <$ amount of disks in the tube'', by pushing a few disks in right after each other without releasing the pressure-sensor between them, while the insertion code is already running.
+\item Situations with ``$disk counter >$ amount of disks in the tube'', by manually pressing the pressure-sensor a few times while the insertion code is running. Once with $disk counter <= 12$ and once with $disk counter > 12$.
+\end{enumerate}
+From our tests we could conclude that:\\
+Our machine gives the correct error messages in each of the mentioned situation above.\\
+
+
+\item Disk stuck on the pressure-sensor (as in keeps giving the signal for pressed):\\
+We were wondering how our system would behave if we would leave a disk stuck on the pressure-sensor instead of pushing it past it. 
+So we tested it in combinations of the following situations:
+\begin{enumerate}[a.]
+  \item Without disks in the tube or with already disks in the tube.
+  \item Already having the disk in place before the test starts or putting the disk in place during the test.
+  \item Before, during or after running either the code for calibration, the code for flushing, the code for disk insertion or the code for sorting.
+  \item in the transitions from one part of the code to another, where that is possible with a disk on the pressure-sensor.
+  \item during or after an error.
+  \item In case of user input, one test for each possible button to press.
+\end{enumerate}
+From our tests we could conclude that:\\
+When in the waiting state, the machine just got to the state where a disk was added.
+When somewhere else, nothing happened until the resting state, there the machine reported that the user inserted a disk too early.\\
+%\textit{\textbf{Is the part at the conclusion correct and understandable?}
+
+
+\item Cables in different ports:\\
+We were wondering how the system would behave if we put the cables in different ports than we would usually use.\\
+So we tested inserting sensor cables in other input ports and the motor cable in another output port.
+After that we tested inserting sensor cables in output ports and the motor cable in an input port.\\
+From our tests we could conclude that:\\
+Putting a sensor cable or the motor cable in a different port gave errors. 
+So after this we added the support for inserting cables in different ports and after that it only gave an error when, a sensor cable is plugged into a output port or when the motor cable is plugged into a input port.\\
+
+
+\item Testing the behavior of the system when Cables get pulled out, before and during execution:\\
+We were wondering how the system would behave if we would plug out a cable before our during the execution of our program. We were wondering if it Would give an error, just keep repeating its last action or if it would it just stop abruptly.\\
+So we first tested how the system behaved if we started it up with one or more cables plugged out.
+After that we tested unplugging either one cable or unplugging combinations of cables, during the execution of each type of executable code.\\
+From our tests we could conclude that:\\
+At first it would just give an error right away, but after we implemented the part of code for checking which port is connected to what, it ran without problem. Assuming you put the motor in one of the output ports and the rest in some of the input ports of the brick. If you however would plug in the motor into an input port or one of the sensor in an output port on the brick, it would give an error.\\
+
+
+\item Testing if all the disks will always be caught by one of the containers:\\
+We were wondering if after sorting or flushing, all disks landed in the containers and not just fell on the floor. For this we also needed to catch the disks that were more forcefully launched from the sorting wheel.\\
+So we first tested the paths the disks would follow when they leave the sorting wheel and see if these paths where consistent.
+Since the materials we received didn't include containers we first did tests using plastic cups. We placed them at different distances and different angles.
+After that we tested the systems with our current containers. We also tested if the wings would stop launched disks so they would nicely fall into the containers.\\
+From our tests we could conclude that:
+\begin{enumerate}
+  \item{The path that the disks follow when leaving the sorting wheel is not consistent. Disks can fall very close to the wheel, but in some cases even get launched slightly upwards.}
+  \item{If we would want to use only containers to catch the disks, without the wings, we would need to hold the containers ourselfs by hand our build a quite complex mounting system to be reliable.}
+  \item{Our initial wings also needed to be blocked from above to be reliable.}
+  \item{After some adjustments to the wing, our containers work reliably if placed close enough to the sorting wheel, with the open end facing towards the sorting wheel.}
+\end{enumerate}
+
+
+\item Testing all interaction between the user and the EV3 brick, when asked for input:\\
+We were wondering if the behavior of the EV3 brick is what we expect it to be, when it asks something to the user and gets a replay from the user.\\
+So we tested all situations in which the user is asked for input and all possible inputs the user can give in those situations.\\
+From our tests we could conclude that:\\
+It behaves as we expect it to.\\
+
+
+\item Testing all interaction between the user and the EV3 brick, when there is no request for input from the user:\\
+We were wondering how the system would behave if the user presses the abort or stop button. We were also wondering if pressing some or all the other buttons on the brick, while there is no input request, would influence behavior the system.\\
+So we tested pressing the abort and stop button in as many situations as possible and we tested pressing the other buttons while the brick was not waiting for user input.\\
+From our tests we could conclude that:\\
+It behaves as we expect it to.\\
+
+
+\item Testing if all types of the error detection get triggered, when and only when, they are expected to happen:\\
+We were wondering if all types of error detection we have, can actually be triggered in the situations where they are expected to happen. We were also wondering if there is a situation where an unexpected error detection could happen.\\
+So we tested all the situations for which we wrote error detection code. We also tested if any unexpected error detection would appear during other test cases.\\
+From our tests we could conclude that:\\
+All types of error detection happen in the situations where they should happen and only in those situations.\\
+
+
+\item Testing the behavior of all the errors:\\
+We were wondering if all the possible errors behave in the way we expect them to behave.\\
+So we tested all the errors.\\
+From our tests we could conclude that:\\
+All errors behave as we expect them to.\\
+
+
+\item Testing a few normal runs right after each other to confirm reliability:\\
+We were wondering if after all the adapting and adjusting we did to our system, it will run smoothly and if we can be sure enough that it will also run smoothly on the next run.\\
+So we tested the system many times without triggering any errors and observed if it would run in a consistent way.\\
+From our tests we could conclude that:\\
+Our system is reliable enough that it is unlikely that something will go wrong if you correctly follow the user-cases and user constraints.\\
+
+\end{itemize}
+
+\newpage
+\section{System under test and Formal Proofs}
+At the end of chapter 5 (Software Specification) we gave you a quick glance at our UPPAAL model. As we mentioned there, we are now going to give more details about the UPPAAL model and its contribution to our project. The construction of our UPPAAL model was a long, exhausting and frustrating process. This is the case because there were not a lot of tutorials online, and the tutorials of the models that were online were in no way comparable to the complexity of our finite automaton. It would therefore be nice if the university provided us with a little more documenting of how to use UPPAAL with an embedded system of this complexity. In the end we managed to make a model ourselves (with a lot of tweaking), but it has cost us a tremendous amount of time. That was something we wanted to get across. Now back to the model: We already showed a screenshot of the model in chapter 5, here are some other shots of vital components of the UPPAAL model. \\
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.7]{\img uppaal_declarations.png}
+  \caption{The global declarations of our UPPAAL model} 
+  
+  \vspace{0.3cm}
+
+  \includegraphics[scale=0.7]{\img uppaal_sys_declarations.png}
+  \caption{The system declarations of our UPPAAL model}
+\end{figure}
+
+As mentioned before our UPPAAL model is a simplification of the finite automaton which our software is actually based on. The UPPAAL model covers the  most import things. It is where the actual sorting of the disks happens and a lot of error detection is covered in it. States that are implemented in our software, but not integrated in our model are for example the states responsible for the calibrating of the wheel. As we have seen at the previous section we have done a lot of test cases. Some of these test cases were at a stage where we had a complete working system. This is, a system under test with the entire machine and all its input, output and error-detection (combining software and hardware).\\
+
+In week 6 for example we decided that we have implemented and tested the whole system enough and that it was ready to be considered as a 'snapshot' of our final product. So we did a test case with our sorting machine. We have of course already done a lot of test cases in which we tested the whole system, but we wanted to do like an 'official' test case where we repeatedly tested the entire machine. Here follows a brief summary of the test run (description of the execution of the test case) of this test case: The expectation was that it would have sorted the disks correctly and in the process of doing so showing correct output messages on the screen of the brick. We started the program on the brick. The calibrating was done correctly, and while doing so, showing correct screen messages. We then inserted 12 disks (after telling the machine that the tube was empty). While inserting the disks the screen messages were correct. We then told the machine to start with sorting the disks. 
+\\It sorted the disks in approximately 7 seconds. All the black disks (6) were in the right container and all the white disks (6) were in the left container.\\ While sorting the disk and when the sorting was done the machine outputted correct messages on the screen (that is, showing the correct state, notifications for the user and valid counter values).\\
+We have run these full tests repeatedly and with different inputs and different 'paths' into our finite automaton. This is a brief summary of a test run. For more detailed descriptions of test runs we refer to \seeref{system-validation:test-cases}. 
+
+Now lets go back to the UPPAAL model, because we can also consider a UPPAAL model to be a system under test (SUT). With UPPAAL you can simulate the behavior of the finite automaton. That is, you can specify the input and see if the output matches your expectations. UPPAAL provides several ways of simulating. The simulator of UPPAAL is a validation tool that enables examination of the possible dynamic executions of a system. It thus provides us an inexpensive mean of fault detection prior to verification by the model-checker. In the early phases of designing the model we exhaustively used the the step-by-step simulation as a validation tool. We could select from the enabled transitions ourselves and select next to take the transition. This helped us fixing faulty things of smaller components of our model (in the early phases of designing the model/ finite automaton). At later stages we also used the random simulator in which the program starts a random  simulation where the simulator itself proceeds automatically by randomly selecting enabled inputs. We have used this to check to see if our model contained mistakes and if it would get stuck somewhere. The random simulator is very fast so if you let it run for a while and observe its behavior it can be considered as a good validation tool for your model. When you know where to look of course. We made a video of our UPPAAL model, where we show some executions of the simulators (both step-by-step and random mode): \href{https://goo.gl/WaFC95}{https://goo.gl/WaFC95}. \\
+
+In addition we also used the verifier of UPPAAL as validation tool for our model. The verifier is to check safety and liveness properties by on-the-fly exploration of the state-space of a system in terms of symbolic states represented by constraints. We had at first a lot of problems doing these verification. When properties were not satisfied, it would give back the result: "property not satisfied", immediately, or in a couple of seconds. If this was not the case it would explore the state space until it would run out of memory. It would have passed millions of states (the verifier gives a past waiting list load of states) and it would then give an error stating that it we should consider reducing the amount of states etc, because the state space is too big. when doing some research on the internet we found that there were more people who encountered these problems. The verifier some times used up to 3/4 GB of the ram, but can not continue since even though the machine can have plenty of free memory (8GB) there is a limit as to how much as single process is allowed to address. This is caused by two things: UPPAAL is a 32-bit process. This means that there is now way that UPPAAL can address more than 4GB of memory and in addition the operating system only reserves a certain amount of address space for the user. On UPPAAL fora on the internet a software developer of UPPAAL advises to turn on aggressive state space reduction and the compact data structure representation. \newpage
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.8]{\img verification_memory1.png}
+  \includegraphics[scale=0.7]{\img verification_memory2.png}
+  \caption{The verification process of some queries (A[]'s)}
+\end{figure}
+
+Because we have a big finite automaton with a lot of transitions, our state space is very big of course. We therefore had to use the advised options. UPPAAL gives us a lot of options: You can change the search order. This option influences the order in which the state space is explored. The options are Breadth first, Depth first and Random depth first. Based on the description Bread first should work best for us. UPPAAL in addition provided us a State Space Reduction option. You can choose between none, conservative and aggressive. We choose aggressive ofcourse, considering the size of our state space. It in addition also provides us an option for choosing the State Space Representation. We have tried Difference Bound Matrices (default), Compact Data Stucture (advised) and Under Approximation (and we then in addition chose the lowest hash table size). When tweaking these options the verifier would reach up to tens of millions states (it would take more than one hour to check one query). You can safely conclude that when reaching this stage the property is satisfied. Here follows a list and explanation of the statements (queries) we have verified using the UPPAAL model verifier:
+
+\begin{itemize}
+\item A[] not deadlock  A state is a deadlock state if
+there are no outgoing action transitions neither from the state itself or any of its delay successors. Due to current limitations in UPPAAL, the deadlock state formula can only be used with reach-ability and invariantly path formula. A deadlock can be evidence of a design error. 
+\item A[] whitecounter  $>= 0$, E[] whitecounter  $>= 0$ and A$<>$ whitecounter  $>= 0$. To check if the white counter cannot obtain negative values (should not be the case).
+\item A[] blackcounter  $>= 0$, E[] blackcounter  $>= 0$ and A$<>$ blackcounter  $>= 0$. Same goes for the black counter.
+\item A[] SortingMachine.waiting imply diskcounter $>= 0$, E[] SortingMachine.waiting imply diskcounter $>=$ 0 and A$<>$ SortingMachine.waiting imply diskcounter $>=$ 0. While we are in the waiting state it will always be the case that there will either be no disks in the tube (diskcounter $= $0) or a positive number of disks.
+\item A[] SortingMachine.sortdisksnocounting imply (colorblack==1 $||$ colorwhite==1), E[] SortingMachine.sortdisksnocounting imply (colorblack==1 $||$ colorwhite==1)
+A$<>$ SortingMachine.sortdisksnocounting imply (colorblack==1 $| |$ colorwhite==1). If we are in the SortDisksNoCounting state we have either seen a black disk or a white disk.
+\item A[] SortingMachine.expectsdisk imply diskcounter$>0$, 
+E[] SortingMachine.expectsdisk imply diskcounter$>0$ and 
+A$<>$ SortingMachine.expectsdisk imply diskcounter$>0$. When we are in the state expectsDisk it is always the case that the amount of disks that is counted is at least 1.
+\end{itemize}
+
+This concludes the  verification and testing done with our UPPAAL model. If you want to check out our UPPAAL model yourself you can download the .xml file at:\\ 
+
+https://drive.google.com/open?id=0B1zsOJUSLtRkWFo4TXhmZUxfOGc

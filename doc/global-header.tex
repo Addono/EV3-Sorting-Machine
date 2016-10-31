@@ -1,0 +1,135 @@
+%------------------------------------------------
+%            Import packages
+%------------------------------------------------
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+%  Allow nice numbering of lists.
+%\usepackage{enumitem}
+\usepackage{enumerate}
+%  Prevent cutting of paragraphs.
+\usepackage[defaultlines=6,all]{nowidow}
+%  Add some math
+\usepackage{amsmath}
+\usepackage{amsthm}
+%  Add some graphics
+\usepackage{graphicx}
+%  Add the possibility of adding To-Do-Notes
+\usepackage[colorinlistoftodos,obeyFinal]{todonotes}
+%  Get color and href package
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{hyperref}
+%  Let's do some calculations
+\usepackage{fp}
+%  Set the color of the links
+\hypersetup{
+	colorlinks=true,
+	linkcolor=red,
+	filecolor=red,
+	urlcolor=blue,
+}
+% Tikz to draw some things.
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning, calc}
+% To keep track of our time spend on this project.
+\usepackage{logbook}
+% Helps positioning the images.
+\usepackage{float}
+% To show some source code.
+\usepackage{listings}
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\usepackage{listings}
+\lstset{
+	language=Java,
+    showspaces=false,
+    showtabs=false,
+    keepspaces=true,
+    tabsize=2,
+    breaklines=true,
+    showstringspaces=false,
+    breakatwhitespace=true,
+    commentstyle=\color{pgreen},
+    keywordstyle=\color{pblue},
+    stringstyle=\color{pred},
+    basicstyle=\ttfamily,
+    moredelim=[il][\textcolor{pgrey}]{$$},
+    moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{pgrey},
+    captionpos=t,
+    frame=single,
+    title=\lstname
+}
+
+% You might need to make an apendix, this will make that a lot easier.
+\usepackage[toc,page]{appendix}
+
+% Let's add some comments.
+\usepackage{comment}
+
+\setlength{\parindent}{0pt} % Prevents indention of all paragraphs.
+
+%------------------------------------------------
+%            Define folder locations.
+%------------------------------------------------
+\newcommand{\final}{final/}
+\newcommand{\reflection}{reflection/}
+\newcommand{\orientation}{orientation-phase/} % Set the folder of the orientation phase.
+\newcommand{\machineDesign}{machine-design-phase/} % Set the folder of the machine design phase.
+\newcommand{\softwareDesign}{software-design-phase/} % Set the folder of the software design phase.
+\newcommand{\softwareSpecification}{software-specification-phase/} % Set the folder of the software design phase.
+\newcommand{\softwareImplementation}{software-implementation-phase/} % Set the folder of the software implementation and integration phase.
+\newcommand{\systemValidation}{system-validation-phase/} % Set the folder of the system validation and verification phase.
+\newcommand{\logbook}{logbook/} % Set the folder of the orientation phase.
+\newcommand{\image}{images/} % Set the folder of the images.
+\newcommand{\img}{\image}
+\newcommand{\src}{source-code/}
+\newcommand{\appendixFolder}{appendix/}
+\newcommand{\pseudocode}{pseudo-code/}
+\newcommand{\agenda}{agenda/}
+
+%------------------------------------------------
+%            Add reference commands
+%------------------------------------------------
+% One single link
+\newcommand*{\fullref}[1]{\hyperref[{#1}]{\autoref*{#1} \nameref*{#1}}}
+
+% Reference in the form: "(<title>, <type> <number>)", so for example "(Structure, section 6.3)".
+\newcommand*{\longref}[1]{\hyperref[{#1}]{(\nameref*{#1}, \autoref*{#1})}}
+
+% Reference for appendix.
+\newcommand*{\aref}[1]{\hyperref[#1]{Appendix \ref{#1}: \nameref*{#1}}}
+
+% Creates a reference to a (sub)section/chapter like this "Requirements (see subsection 3.2)".
+% @input	Name of the label to refer to.
+% @output	Generates a title in the format "$Title (see $Type$ $Number$)".
+\newcommand*{\seeref}[1]{\hyperref[{#1}]{\nameref*{#1} (see \autoref{#1})}} 
+
+%------------------------------------------------
+%            All other commands
+%------------------------------------------------
+% Add an email address with link.
+% @input	The email address which should be added.
+% @output	The email address surrounded with a link.
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+
+% Sets the title in the correct way.
+% @input	Title of the document
+% @input	Version number
+% @output	A correctly set title.
+\newcommand{\settitle}[2]{\title{{#1} \\ OGO 2IO70 \\ Version {#2}}}
+
+% Sets the author of the file in the correct way.
+% @input	The full name of the author.
+% @input	The email address of the author.
+\newcommand{\setauthor}[2]{\author{Group 2 \\ {#1} \\ \email{#2}}}
+
+% Makes text bold.
+% @input	The text which should be displayed bold.
+% @output	The text made bold.
+\newcommand{\bold}[1]{\textbf{#1}}

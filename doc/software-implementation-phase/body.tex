@@ -1,0 +1,59 @@
+\section{Structure}
+Since we are directly writing Java we first did some research into the implementation of Finite State Automaton into Java. We found a couple of examples and picked one which used an \emph{enum} to switch between different implementations of a State class. This has the advantage that only one state can and will be active at once. This implementation of the State class has one update function, which get's called by a loop in the Main method, this function decides what the next state should be and what the output is. Since we are implementing a Mealy machine this works fine.
+
+To handle input and output they both have their own classes. The update function of the states only calls functions of an object of both of these. These input and output classes consist of implementations of the input and output variables and methods from the Finite State Automaton, they also contain some other functions to support the input and output functions, these are all private to prevent the user from calling them.
+
+This structure separates the input from the output and prevents any direct contact between these classes. \emph{This caused one problem} for the counters, since a counter can be input, when it's for example read, or output when it's altered. \emph{To solve this} an extra class is defined to which both the input and output object have access to, this state variables class stores all counters. Access to this object is not granted to the states directly, since they can only work with input and output.
+
+The result is not a perfect implementation of a FSA, since transitions aren't instant, but this allows us to almost implement the FSA almost directly.
+
+%--------------------------------------------------------
+
+\section{LeJOS} \label{implementation:lejos}
+For our implementation we choose for LeJOS since it's free, seemingly complete, and Java based. Our experience with LeJOS was limited to non existing, only one of our group had used it before - briefly during the carnival brake - but on a NXT in stead of the EV3. Therefore there was still a lot to learn and explore for all of us.
+
+\subsection{Installation}
+Since LeJOS is third party software we still had to install it. It shouldn't have been that hard, but it still took an entire afternoon to get it working. Preparing the micro-SD card went fairly simple since the leJOS documentation has their own guide on how to do this. The first problems appeared when it didn't seem to detect the files on the card and we wanted to take it out. This turned out to be a bit harder than you would expect, the micro-SD slot had no spring to push the card out and there is to little space to pull the card out with your fingers. The internet isn't conclusive about this problem but the solution was to use pliers to get it out. We eventually found a workaround by using the point of some cutlery to retrieve it.
+
+When we overcame this difficulty the next obstacle appeared to be the micro-SD card itself. Although this wasn't clear since it functioned without problems in Windows, but it gave read and/or write errors during the installation. That it was the card wasn't clear from the messages since the install error message was really generic. The internet wasn't really helpful in this situation either, especially when you have to filter between all the different versions of leJOS, and after a lot of different attempts we decided to try our luck with a different micro-SD card. This one didn't gave any problems at all and 10 minutes later leJOS was running on our brick.
+
+Before we could actually run some sample code on our machine we first had to get it on there. The instructions of leJOS to achieve this where scattered over a couple of pages so it took some time to get it working. LeJOS uses a ethernet adapter over USB to push your programs on it, later on this caused problems since IP addresses weren't issued which made connection impossible. A solution is to give both devices static IP addresses, but since every USB port get's a different adapter we had to do this a couple of time, which can be quite frustrating.
+
+\subsection{The Library}
+The leJOS library is easy to use and nicely structured. It suited all our needs, although the lack of examples and sometimes even documentation did slow us down, there where multiple occasions where we had to look through the source code of the classes to find out what they offered and how they should be used. Luckily most simple things, like for example turning a motor or drawing text on the display, can be achieved with a single line of code, and there are plenty of examples for them. When we started to get the hang of it the experience improved a lot, all the features of Java and the leJOS library, in combination with the FSA structure made debugging and implementation of extra features a lot faster and easier.
+
+The Eclipse plugin is worth mentioning, installing it is easy and makes the life of the developer a lot easier. It allows the content assist to show their documentation, which saved us a lot of time. Also running your program on the EV3 is now possible - once setup - with one button click which takes care of compiling, uploading, and launching of your program. It also features a debug mode which should allow usage of breakpoints and other Eclipse Debug features. All of this made our general experience a lot easier since it really supports the developer.
+
+%--------------------------------------------------------
+
+\section{Coding standard} \label{software-implementation:coding-standard}
+Since we could develop directly in Java we had no need to define any conversion standards to Assembly, but we had to standardize a lot of other things. First of all we agreed to keep the coding standard of the programming course in mind.
+\begin{itemize}
+	\item The most important thing for our coding standard is that the earlier explained structure is honored. Example of abuse of the structure would be using input during output functions, which should actually be handled by the state which uses that output function. Only in some exceptional cases when we as a group cannot come up with a proper solution or it results in a significant simplification of the code we allow minor changes to the structure. An example for this is the use of the delay class which prevents the implementation of an extra state which stalls the program.
+    \item Naming of states and public input and output functions should be similar to, or the same as, the names in the FSA.
+    \item Comments should be used for all code that isn't directly derivable from the FSA.
+    \item All functions should have their access level modifier set accordingly and have a description of the function. For functions with multiple parameters explicit description of these is strongly recommended.
+    \item Functions may only be added if they have a direct need, this allows placeholders but prevents the creation of functions which are unused at creation.
+    \item Code is not allowed to be directly copied from the internet. Rewriting code examples to our needs is preferred, although exceptions can be made as a group if it would result in a significant time saving and its usage would improve the final result.
+    \item Extra classes should only be imported when used, and removed when obsolete.
+    \item Related functions should be placed in groups, each group should have it's own caption to show where one group starts and the previous one ends. An example of a group can be all output functions which allow motor control.
+\end{itemize}
+
+%--------------------------------------------------------
+
+\section{Additions} \label{software-implementation:additions}
+A couple of things where added during this phase after we finished the development of the sorting machine. These made the machine easier to operate and more efficient.
+
+\subsection{Automatic wheel calibration}
+Automatic wheel calibration was our original plan but got pushed to the end of the implementation phase, because we first wanted to get the sorting itself stable, problems where caused by the color sensor which had problems detecting the difference between a close black disk and further away gray wheel. After changing the color of the wheel to red this became a lot easier and afterwards we started looking into implementing the calibration. This wasn't in the initial UPPAAL model to decrease the complexity, the calibration itself was something which we already created during the design of the FSA, therefore implementing the states wasn't that much of a problem, calibrating the input values of the color sensor eventually caused a lot more problems since their value can be quite unstable.
+
+\subsection{Sensorport detection}
+Support for using an arbitrary sensor port for both sensors, and the same for the motor, was one thing we added later on. This caused quite some problems since we first wanted to find the location of the sensor every time we polled the sensor. The lack of documentation made it quite an exploration before we came up with a full implementation for our sorting machine. This relied on two classes which had to access each port, only one of both classes could have an open connection with a port at the same time. Opening and closing a port caused so much time that it really slowed down the machine. Therefore we now only detect in which port everything is at the start of the program. Now it does not detect sensors and motors which get disconnected in real time. Which shouldn't really be a problem since the connectors of the cables aren't easy to disconnect. So it seems quite impossible to achieve disconnecting a motor or sensor by accident.
+
+\subsection{Motor stall detection}
+This was not in the original design but implemented at the end. This adds a state which is not described in the UPPAAL model, but since it is a simple state which only function is to show a message and wait for the user to dismiss this we assume it trivial. Without this detection a stalled motor will just keep on trying to achieve it's target angle until it reaches it. The motor is designed for this, but it gave the nasty result that after a couple of seconds of stagnation still trying to reach it's target angle seemed silly and gave the machine a `dumb' impression.
+
+After implementing the stalling detection we now check if the motor is stalled, and if it is the program switches to the motor stalled state. In which the user is asked to resolve the problem, afterwards the program goes back to calibrating and after this the machine should be operational again.
+
+\subsection{Enhanced UI}
+What we would specifically communicate to the user wasn't specified beforehand. During the process of designing the machine we came up a lot of things which where useful for debugging, now most of them are gone since they are - or should is maybe better - not necessary for the end user. This doesn't mean that their influence is entirely gone. Showing the counters and the current state where things which where first of all used for debugging and checking our program, but managed to make it into the final UI of the machine. Over time the layout of the UI has evolved to be more compact to get multiple space for multiline messages. Later on we coupled the LED status on the intention of the message drawn on the screen. They are divided into three groups: machine busy, in need of user interaction, and error, each with their own color and flashing rhythm.

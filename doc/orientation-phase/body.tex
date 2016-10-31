@@ -1,0 +1,117 @@
+\section{Orientation} \label{orientation:orientation}
+\subsection{Abstracts of the Project Guide} \label{orientation:orientation:abstract}
+Every member of the group has individually written a short abstract of the project guide. This has really helped us in understanding the structure of the different levels of the project. It gives us a good overview of all the different phases of the project. We know where to start, and to where we're headed. \newpage
+
+\subsection{Work Plan} \label{orientation:orientation:work-plan}
+Part of the orientation phase is consists of writing the Work Plan. In the Work Plan is indicated explicitly who will be doing what and when. The Work Plan also contains the deadlines of all other documents that have been handed in by now. The Work Plan also contains a table that indicates which group member was responsible for handing in which document. Finally the Work Plan indicates which three group members have performed the midterm presentation and which three group members have performed the final presentation of the group. The deadlines that are included in the Work Plan are mostly chosen by us, and approved by our tutor. The deadlines in the Work Plan pertain to the final versions, so drafts were handed in beforehand, so that we could process the feedback from our tutor.
+
+\subsection{LEGO Mindstorm EV3} \label{orientation:ev3}
+\subsubsection{Overview} \label{orientation:ev3:overview}
+The LEGO Minstorm series combines the simplicity and quality of LEGO with robotics. The EV3 is the latest in the series and is equipped with an ARM processor, it's own screen, a speaker, 3 motors, multiple sensors, and a decent set of LEGO Technic parts to combine everything. These parts can be used to construct a wide range of robots, from simple beginner robots whom can only drive forward, more advanced designs like for example  \href{https://www.youtube.com/watch?v=pX1cO2XhMrg}{3D milling machines}, or even more complex designs. The EV3 can be linked with others to be able to control up to 16 motors with just one Mindstorm. If the CPU is the bottleneck, then (using third-party software) it is even possible to let a computer do (parts of) the calculations in stead.
+
+\subsubsection{The Brick}
+The Mindstorm brick is the central part, it does all calculations, stores all programs, supplies the connection between the computer, contains the needed batteries, and connects to all sensors and motors. It features a (non-color) screen, a couple of buttons, a speaker, a MicroSD slot to increase the internal storage, Bluetooth, and two USB connectors. One of the USB connectors is used to communicate with the computer (can also be done with Bluetooth), on the other one can `normal' USB devices be used in combination with the brick, this should enable the brick to use other devices as input, for example a USB keyboard could be connected, although it should be noted that some third-party code is needed to make this compatible with their software.
+
+\subsubsection{Sensors}
+\begin{description}
+	\item[Touch] The EV3 has two touch sensors, it returns the state (pressed or not) as a boolean value.
+	\item[Color] This sensor can measure the light intensity of 8 different colors, besides this it can also measure the amount of ambient light and reflected red light.
+	\item[Gyroscope] Measuring change in orientation - and thus rotation - can be done with the gyroscope.
+	\item[Ultrasonic] Measures distance with ultrasonic, it works best at detecting large objects and can measure distance between 1 and 255 cm.
+\end{description}
+
+\subsubsection{Motors}
+The EV3 features 3 motors, two large ones and one `Medium' one, one extra can be added since the EV3 brick supports up to 4 motors to be connected at the same time. All motors have a rotation sensor, which make it possible to control position, speed, and acceleration. The motor can also `lock' the current position, in this mode it will try to keep itself in it's current position.
+
+\subsubsection{Programming}
+By default the EV3 comes with LEGOs own firmware and software. This gives the user a drag-and-drop interface to start building, although a lot of robots can be controlled with this, to enable the full potential of the robot third-party firmware and software is needed to enable more complex programming languages to be used to program the robot. There are multiple alternatives to the default Mindstorm programming kit, two examples are:
+	\begin{description}
+		\item[\href{http://www.lejos.org/}{leJOS}] A free Java alternative, originally a fork of the \href{http://tinyvm.sourceforge.net/}{TinyVM Project} for the first Mindstorm, shortly after the release of the EV3 it got ported, it allows more complex programming structures like recurrence, arrays, objects, and many more.
+		\item[\href{http://www.robotc.net/}{RobotC}] A payed alternative for the original firmware, it is C-based and only supports Windows as development platform. Programs for the EV3 can be written in C, besides programming the physical EV3 it is also possible to develop, test, and debug (EV3) robots in a virtual environment.
+	\end{description}
+
+\newpage
+\subsection{Differences between EV3 and PP2} 
+The EV3 contains a way more complex processor, compilers for this processor are available, and thus programming in a higher language is possible. These higher programming languages often have a extensive list of features, like for example object oriented programming and data types like floats.
+
+Also there are libraries available which contain methods for handling a lot of things, like the interpretation of input of sensors and the correct way of generating output towards motors, meaning that the direct input and output can be handled by these libraries making it in most cases unnecessary to implement these yourself. Some libraries even contain classes which are abstract implementations of some common robot designs.
+
+If we compare the sensor of the PP2 against the sensors of the EV3 then there are two main differences. First of all, the EV3 kit contains a lot more sensors than the PP2 kit where the other groups work with. Although every analogue signal - if the voltage is in the correct range - can function as an input for the PP2, the EV3 features something comparable since extra sensors can be made by third parties. This is however more complicated than the PP2 analogue input method, but they both feature the possibility to add sensors yourself. \\ 
+The second difference between the sensors of both kits is that the sensors of the EV3 are a lot more evolved, not only do they all feature the same compact design, but also are most of them quite complex compared to the sensor of the PP2.
+
+\section{Work Plan} \label{orientation:work-plan}
+\subsection{Phases}
+We have made a division of the phases over the weeks. The deliverables of each phase are to be handed in each Friday of the particular week of that phase (except Software Implementation and Integration which is done in two weeks). This way our tutor can have a look at it over the weekend and necessarily Monday so that he can give us feedback during the meeting of the following week (Tuesday). If necessary, changes are made on Tuesday, and then again shortly discussed on the Wednesday meeting. If it is approved, the final version of the particular deliverable will be handed in on that Wednesday. This way we'll have a structured way of processing feedback and handing in the final version of each deliverable.\newpage 
+
+\subsubsection{Orientation}
+The first phase is the Orientation phase. In this phase we will deliver the Work Plan (That's due Friday week 2 at 5 o'clock) This will be made by \emph{Jolan and Abdel} on Tuesday, \emph{Adriaan} will make a list of deliverables. The Work Plan will be checked and finished on Wednesday. We will also make a checklist to keep track of all the documents we need to submit. This will be done by \emph{Adriaan.} We will eventually add this to the Work Plan. The 2nd week on Wednesday we will also have three presentations. A presentation about the V-model will be done by \emph{Abdel} (since \emph{Bogdan} is absent), a presentation about Software specification and UPPAAL will be done by \emph{Jolan and Valentin}, finally a presentation about System validation and testing will be done by \emph{Ivo and Adriaan.}
+
+\subsubsection{Machine Design}
+The second phase is designing the sorting machine. In this phase we will try to build the machine itself using our Lego and we'll deliver a document concerning the machine design, this will be done by \emph{Jolan} by Friday (19 February). If we do not succeed in finishing it on the 19th, then we will hand it in on the same day as the deliverable of the following week (Software Specification). In this document we have to define the System Level Requirements, consisting of the user cases, user constraints, and safety properties, and in addition the Machine Interface. The design of the physical machine and the system level requirements is an iterative process. We will deliver this document in week 2 as well and we'll work on it on Wednesday. If we don't succeed, we'll continue on Friday morning. 
+
+\subsubsection{Software Specification}
+\noindent The third phase is Software specification. We will work on this on Tuesday and Wednesday in week 3 and deliver a document about this, made by \emph{Valentin} together with the UPPAAL model made by us all. This will be done by Friday (26 February) that week (3). \emph{[February 17] Valentin is quitting the Software Science program, Bogdan will be responsible for the document instead of Valentin.} From this point on we will unfortunately be with 5 people instead of 6. We thus have to make some adaptions to the draft of  Work Plan [February 17]. This same week there will also be Midterm presentations on Wednesday by \emph{Adriaan, Abdel and Ivo.} \newpage
+
+\subsubsection{Software Design}
+\noindent The fourth phase is Software Design. In this phase we'll write pseudo-code that will realize the specified functions of the sorting machine. This program serves as a stepping stone towards the leJOS (Java) code that will be constructed in the next phase: Software Implementation and Integration. If applicable, Exception Service Routines can be formulated as ordinary, parameter-less methods. In the document "Software Design" the design decisions and choices of the data representation must be explained and motivated. We will work on this phase in week 4 and hand in the deliverable before Friday (4 March). If we however do not succeed in handing in the deliverable in week 4, we will move it to week 5 since we have reserved two weeks for Software Implementation and Integration. This document is to be constructed by \emph{Abdel.}
+
+\subsubsection{Software Implementation and Integration}
+The next phase is Software Implementation and Integration. The pseudo-code from previous phase must be implemented in language suitable for the EV3. We also have to consider the different possibilities that EV3 provides, language-wise, and weigh in mind which is the best choice for us. The data representation chosen and the coding standard are to be documented in a short document "Software Implementation". Finally the program must be compiled and integrated so that it can be run by the EV3. We will work on this phase in week 5 and week 6 and hand in the deliverable before Friday (18 march) (before the 18th if possible, because this way we'll have more time to process feedback and to debug). This document is to be constructed by \emph{Adriaan.}
+
+\subsubsection{System Validation and Testing}
+We have one phase that is parallel to all the other phases and activities except the machine design phase. It is the System Validation and Testing phase. The goal of this activity is to ensure the high quality of the final product. An important objective of this activity is to ensure trace-ability from the System Level Requirements down to the integrated object code. The System Level Requirements document should also contain the choices made with relations to validation and testing, since it is impossible to thoroughly test, review and prove everything.\\ 
+
+We also have to argue the trace-ability between system level requirements and the final code, to prove that we have designed the machine as carefully as we could. Note that it is not required to actually put all review, test, proof reports in the deliverable of this phase. But we will try to keep "log books" about these activities using a textual file. This text file will be submitted as a digital appendix to our deliverable (and also to the final report). Part of System Level Requirements is code review, we also have to deliver a "review report" (short, max 1 A4) as documentation of this, stating the date, people involved, the kind of activity, and how it was performed (Were bugs found? Were improvements made to the code? etc.)\\ 
+
+The System Level Requirements should thus include description of reviews, test executions and properties and proofs in appendix. \emph{Bogdan} will construct, and is responsible, for the deliverables of this phase. \emph{[February 17] Since Valentin is quitting the program, we have moved Bogdan to Software Specification and have Jolan as replacement for constructing the System Validation and Testing document.} Since this phase is parallel to other phases, we will all have a big contribution to this document, so \emph{Jolan} is the one who has the overview, but we will all add things to this document. As mentioned before, this phase is parallel to other phases, and these phases are from week 3 until and including week 7. The deliverable will be handed in before the final report, so that we can process feedback, if necessary.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.65]{\img software_testing.png}
+    \caption{Overview of the software development phases}
+\end{figure}
+
+\subsubsection{Completion}
+The final phase is the completion phase. In this phase the documents resulting from the preceding phases must be integrated into a single document "Final Report". In addition we have the final presentation in the last week 8. They will be done by \emph{Jolan and Bogdan.} Keeping the conclusions from the final presentations in mind, some time is reserved to solve unforeseen problems.\\
+The final report presents the reader with a clear picture of the designed machine, the method of working followed, the specification, validation, and design of the software, and a motivation of the main design decisions. The conclusion must pay attention to what has been learned during this project and which complications have been encountered and how the group has handled these. \emph{Ivo} is responsible for the final version of the final report. It will be handed in on Friday, 1 April. This way we'll have some time to process feedback, if necessary, before we hand in the final version on or before Friday, 8 April.
+
+\subsection{Quality Assurance Manager}
+The Quality Assurance Manager is responsible for the deliverables. He will not necessarily construct the particular document to be handed in, but he'll make sure that it is finished and handed in, in due time. He will also be responsible for the processing of feedback giving by our tutor into the final version of the particular deliverable.
+
+During the project we will have three different Quality Assurance Managers. He monitors whether all communication between group members runs smoothly and whether all (intermediary and final) deliverables, documents and ``products'' are handed in time to other members, our \emph{tutor or/and Pieter Cuijpers.} The Work Plan may have to be adjusted. The Quality Assurance Manager does not have to redistribute work, but makes sure the Work Plan is up to date. Finally, the Quality Assurance Manager monitors the quality of handed-in products, by checking whether the products meet the requirements. \newpage
+ 
+\subsection{Deliverables}
+  \begin{center}
+  \begin{tabular}{p{4cm} | p{4.5cm} | p{3cm}}
+  \textbf{What} 								& \textbf{When} 					& \textbf{Who} \\ \hline
+  Abstract of the Project Guide 				& Friday week 1, 17:00 individual 					& Individual \\
+  Self-reflection 								& Friday week 7, 17:00 individual 	& Individual \\
+  Work Plan with assignment of tasks 			& Friday week 2, 17:00 group 		& Abdel \\
+  Machine Design 								& Firday week 2, 17:00 				& Jolan \\
+  Software Specification 						& Friday week 4, 17:00 				& Bogdan \\
+  Software Design 								& Friday week 6, 17:00 				& Abdel \\
+  Software Implementation 						& Friday week 6, 17:00  			& Adriaan\\
+  System Validation and Testing 				& according to Work Plan 			& Jolan \\
+  Midterm Presentations 						& Tuesday 23rd, Thursday 25th and Friday 26th Feb 2016 (Room MMP1) & Ivo, Abdel \newline and Adriaan \\
+  Final Presentations and Competition 			& Tuesday 29th, Thursday 31st Mar 2016 (Room MMP1) and Friday 1st Apr 2016 (Room GEM Z)  & Jolan, Adriaan \newline and Bogdan \\
+  Final Report 									& Friday Apr 8th 2016, 17:00 		& Ivo 
+  \end{tabular}
+  \end{center}
+
+
+\subsection{Distribution of Tasks}
+  \begin{center}
+  \begin{tabular}{l | l | l | l}
+  \textbf{week} & \textbf{President} & \textbf{Secretary} & \textbf{Quality Insurance Manager} \\ \hline
+  Week 1 & - 			& - 		& - 		\\
+  Week 2 & Abdel 		& Ivo 		& Adriaan 	\\
+  week 3 & Jolan 		& Bogdan 	& Adriaan 	\\
+  week 4 & Bogdan	 	& Ivo 		& Adriaan 	\\
+  week 5 & Adriaan 		& Abdel 	& Bogdan 	\\
+  week 6 & Ivo 			& Jolan 	& Bogdan 	\\ 
+  week 7 & Adriaan	 	& Bogdan 	& Abdel 	\\
+  week 8 & Jolan 		& Ivo 		& Abdel 	\\
+  \end{tabular}
+  \end{center}
+
+The material manager during the entire course is \emph{Abdel}, he will look after the key of the locker and the material.

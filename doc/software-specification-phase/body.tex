@@ -1,0 +1,59 @@
+\section{Introduction}
+
+The software specification talks about the desired behavior of our machine. This part describes what the program does without telling how it does it.
+
+\section{Inputs and Outputs}
+
+The first part is to determine what the input of our program is, and after a careful analysis we categorized the input of the machine into three parts: 
+\begin{itemize}
+\item the color sensor - the most important input -, which determines the color of the tile that is currently on top of the sensor to be able to tell the motor in which direction it should spin. It also determines if there is no tile there. This aspect will be used in error detection.
+\item the touch sensor. It is attached at the beginning at the tube and every time a tile is introduced in the tube, the input will change from 0 to 1. Immediately after the tile has passed, the input will change back to 0. We will use this aspect in order to count how many tiles are there in the tube. Every time the input reads 1, we will increment the counter.
+\item the buttons are the last part of the inputs. We have two buttons: one for START/STOP, which starts the machine and stops it after completing the current cycle, and the ABORT button which does exactly as it sounds and stops the machine immediately. After the ABORT button has been pressed, human intervention is needed.
+\end{itemize}
+
+The second part is what comes out of those inputs, the outputs:
+
+\begin{itemize}
+\item the motor is the most important output, it’s what determines how the wheel moves and in what direction: the motor is entirely dependent on the color sensor input and it is also dependent on the calibration
+\item the screen is where we output all the errors and how many tiles there are in the tube, how many tiles have been sorted, how many are black and how many are white. Basically, it tells the state in which the program is
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+    \includegraphics[scale = 0.57]{\img finitestateautomaton.PNG}
+    \caption{State Transition Diagram of the finite automaton made in JFLAP}
+\end{figure}
+
+\section{Finite State Automaton}
+
+Now, the most important part of the program is how the outputs depend on the inputs, and for this part we will use a Finite State Automaton, which we constructed.
+The main finite state automaton is the one with the green circles. The yellow use are used for:
+
+\begin{itemize}
+\item the top one is used instead of the Sort Disk
+\item the bottom one is used instead of the Calibration
+\end{itemize}
+We decided to go with this implementation in order to not clutter the diagram.
+
+Our software starts from rest, and then checks whether the disk tube is empty or not and proceeds accordingly to one of the two states that depend on this. If the tube is not empty, than the program sorts all the disks that are already in the tube and when all the disks are sorted, goes to the Waiting state. If there is no disk in the tube while in the rest state, the program expects it to be finished. If there is disk in the tube, the we have detected an error and the program expects the intervention of the user and than goes to Accept disk(if count is 0 or less then it will go to expects finished). The third part of the rest state is when the user specifically says that the tube is empty, the the program goes directly to the Waiting state. From the Waiting state, we start to add disks, when the touch sensor reads 1, we go to add disk and then, when it goes back to 0, the counter is incremented and the program goes back to the Waiting State. 
+
+\vspace{2mm}
+
+Now, when the user presses Start, the program goes to Accept Disk, from which if the counter is bigger than 0, we go to the expects disk phase. Here, if there is no disk in the tube, we found an error and we go back to the Rest and if there are disks, we go on to sort them. Now we check the color of the disk. If it’s white and not black than turn the wheel 1 time, increment the black counter and decrement the tiles counter to show that one was sorted. Then we move again to accept disk and we do this for every disk in the tube. From check color, if the color is not black and not white, then we detected and error and move to the rest phase. When there is no disk left, the program goes to rest.
+
+\vspace{2mm}
+
+\emph{The calibration phase} is used to calibrate the wheel and it is called by the user. The user can either skip and the program goes to rest or choose to calibrate it and the program asks for a reference, calibrates the wheel and than goes to the resting phase, putting the speed at 0.
+
+The calibration phase is not part of the final state diagram because at that time, the calibration was just an idea. So we will argue its correctness informally. This phase starts when the program is booted right before the Resting state, but it can also be called from the Resting state. We define a teeth as the part of the wheel the pushes the disk left or right. The first part of the program checks if a teeth is blocking the color sensor and thus the disks. In order to detect that, we decided to build the teeth with red pieces of Lego, making it easier to be distinguished from the disks. If that is the case, we turn the wheel half a teeth and go on to find the first calibration point. To find it, we just turn the wheel for half a teeth until one is found then go on to find the second one. \newpage
+
+\section{UPPAAL}
+In addition to the finite automaton given and described in the previous section(s) we have made a version of the finite automaton in UPPAAL. UPPAAL is a tool developed for the description of high-level state behavior. The finite automaton is however a simplification of the actual automaton. Our finite automaton is a Mealy Machine with a lot of string output (interaction with the user). We have omitted these things in the UPPAAL model since it would otherwise be a big mess. The UPPAAL model is here to help us with testing the system. We will go into further depth about this in the section System Validation and Testing (Chapter 8). There are however some transitions in the UPPAAL model that look superfluous, but they are there to show that each transitions will give a different output (message), even though it can be the case that we omitted these outputs. This is our UPPAAL model and as mentioned before we'll go into further depth into the model and the testing with it in chapter 8. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.465]{\img uppaal_model_softwarespec.png}
+\caption{Our UPPAAL Model. It captures the most import things of what our software should do. It is thus a simplification of the actual finite automaton.}
+\end{figure}
+
+
